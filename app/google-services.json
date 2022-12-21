@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "175201013538",
+    "project_id": "stims-v9",
+    "storage_bucket": "stims-v9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175201013538:android:d61831a1968858076bdf7b",
+        "android_client_info": {
+          "package_name": "com.example.stims_v9"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175201013538-o5pu4mauo3r1srbga5jl51ntuoaf07l9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCL36hjBtNrxMGwULjxDbSFmKm8VHw2T9w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175201013538-o5pu4mauo3r1srbga5jl51ntuoaf07l9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
