@@ -10,8 +10,9 @@ import android.view.ViewGroup;
 
 
 public class StatFragment extends Fragment {
-
-
+//    TODO Filter by Day where in A list of names in that day is created
+//    Make a Calendar picker in which that filter by day works
+//    Make a Search Bar
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

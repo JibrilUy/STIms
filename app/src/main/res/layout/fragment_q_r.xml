@@ -6,7 +6,6 @@
     tools:context=".QRFragment"
     android:background="@color/grey">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <TextView
         android:layout_width="match_parent"
@@ -29,7 +28,7 @@
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
         android:backgroundTint="@color/grey2"
-        android:hint="GENERATE &amp; SAVE QR"
+        android:hint="@string/generate_amp_save_qr"
         android:textColor="@color/white" />
 
 
