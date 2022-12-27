@@ -6,7 +6,6 @@
     tools:context=".QRFragment"
     android:background="@color/grey">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <TextView
         android:layout_width="match_parent"
