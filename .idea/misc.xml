@@ -4,12 +4,14 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/activity_show.xml" value="0.20153985507246377" />
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/fragment_blank.xml" value="0.209375" />
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/fragment_q_r.xml" value="0.2" />
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/fragment_q_r2.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/fragment_scan.xml" value="0.22" />
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/fragment_stat.xml" value="0.25" />
+        <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/item.xml" value="0.20153985507246377" />
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/menu/bottom_nav_menu.xml" value="0.209375" />
       </map>
     </option>
