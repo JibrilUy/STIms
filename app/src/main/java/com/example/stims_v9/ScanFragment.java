@@ -45,6 +45,7 @@ public class ScanFragment extends Fragment {
     }
 
     //something to view in git
+    // trying to make a branch
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
