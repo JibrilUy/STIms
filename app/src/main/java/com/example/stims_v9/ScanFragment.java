@@ -44,6 +44,7 @@ public class ScanFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    //something to view in git
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
