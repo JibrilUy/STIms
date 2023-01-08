@@ -36,6 +36,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         Model model = mList.get(position);
         holder.check_in.setText(model.getCheck_in());
         holder.check_out.setText(model.getCheck_out());
+        holder.name.setText(model.getName());
+        holder.date.setText(model.getDate());
+
 
     }
 
@@ -47,12 +50,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder{
 
 
-        TextView check_in, check_out;
+        TextView check_in, check_out, name, date;
         public MyViewHolder(@NonNull View itemView){
             super(itemView);
 
             check_in = itemView.findViewById(R.id.text_view_check_in);
             check_out = itemView.findViewById(R.id.text_view_check_out);
+            name = itemView.findViewById(R.id.text_view_name);
+            date = itemView.findViewById(R.id.text_view_date);
         }
     }
 }
