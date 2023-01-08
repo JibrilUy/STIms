@@ -15,6 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShowActivity extends AppCompatActivity {
 
@@ -22,10 +23,11 @@ public class ShowActivity extends AppCompatActivity {
     //Initiating Firebase Database
     private final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private final DatabaseReference root = studentDatabase.getReference();
-    DatabaseReference scanResultRef = root.child("something");
 
     private MyAdapter adapter;
     private ArrayList<Model> list;
+
+    List<String> scanResultNodes = new ArrayList<>();
 
 
     @Override
@@ -43,7 +45,25 @@ public class ShowActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         root.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String parentNodeName = snapshot.getKey();
+                    scanResultNodes.add(parentNodeName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+//        for(String nodeName : scanResultNodes){
+//            DatabaseReference dateNodeRef = root.child(nodeName);
+
+        DatabaseReference dateNodeRef = root.child("Jibril");
+        dateNodeRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -59,7 +79,6 @@ public class ShowActivity extends AppCompatActivity {
 
             }
         });
-
-
+            }
     }
-}
+//}

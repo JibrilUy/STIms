@@ -1,13 +1,13 @@
 package com.example.stims_v9;
 
 public class Model {
-    String check_in , check_out;
+    String Check_In , Check_Out;
 
     public String getCheck_in() {
-        return check_in;
+        return Check_In;
     }
 
     public String getCheck_out() {
-        return check_out;
+        return Check_Out;
     }
 }
