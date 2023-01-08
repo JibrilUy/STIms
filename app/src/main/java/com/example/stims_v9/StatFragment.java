@@ -26,7 +26,6 @@ import java.util.List;
 public class StatFragment extends Fragment {
 
     //Initiating Variables
-    private Button btn_list_view;
 
     //Initiating Firebase Database
     private final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -80,18 +79,6 @@ public class StatFragment extends Fragment {
             });
         }
     });
-
-
-        btn_list_view = v.findViewById(R.id.btn_list_view);
-
-        btn_list_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(),ShowActivity.class));
-            }
-        });
-
-
 
 
         return v;
