@@ -79,7 +79,7 @@ public class StatFragment extends Fragment {
             });
         }
     });
-//just to push 2
+//just to push 3
 
         return v;
     }
