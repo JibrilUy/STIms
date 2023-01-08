@@ -22,7 +22,9 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class ScanFragment extends Fragment {
@@ -38,6 +40,9 @@ public class ScanFragment extends Fragment {
     //Initialize FirebaseDatabase
     private final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private final DatabaseReference root = studentDatabase.getReference();
+    private final DatabaseReference userRootRef = root.child("Users");
+    List<String> childNodeValues = new ArrayList<>();
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +84,7 @@ public class ScanFragment extends Fragment {
 
                                 }else{
                                     dateNodeRef.child("Date").setValue(date);
+                                    userRootRef.push().child("student_name").setValue(scanResult);
                                     dateNodeRef.child("Name").setValue(scanResult);
                                     dateNodeRef.child("Check_In").setValue(time).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check In Successfully", Toast.LENGTH_SHORT).show());
                                 }
@@ -87,6 +93,25 @@ public class ScanFragment extends Fragment {
                             public void onCancelled(@NonNull DatabaseError error) {
                             }
                         });
+
+
+//                        userRootRef.addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+//                                    String childNodeValue = dataSnapshot.getValue(String.class);
+//                                    childNodeValues.add(childNodeValue);
+//                                }
+//                                if(!snapshot.hasChild(String.valueOf(childNodeValues)));
+//                                userRootRef.push().child("student_name").setValue(scanResult);
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            }
+//                        });
+
                     });
                     //to show it duh
                     builder.show();

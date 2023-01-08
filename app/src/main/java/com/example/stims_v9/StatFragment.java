@@ -1,6 +1,5 @@
 package com.example.stims_v9;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -30,9 +29,14 @@ public class StatFragment extends Fragment {
     //Initiating Firebase Database
     private final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private final DatabaseReference root = studentDatabase.getReference();
+    private final DatabaseReference studentName = root.child("Users");
+
 
     private MyAdapter adapter;
+    private MyAdapter2 adapter2;
     private ArrayList<Model> list;
+    private ArrayList<Model2> list2;
+
     Button btn_search;
     EditText edit_text_search_bar;
     List<String> scanResultNodes = new ArrayList<>();
@@ -45,14 +49,39 @@ public class StatFragment extends Fragment {
 
 
     RecyclerView recyclerView = v.findViewById(R.id.recycler_view_);
+    RecyclerView recyclerView2 = v.findViewById(R.id.recycler_view_2);
+
     recyclerView.setHasFixedSize(true);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+    recyclerView2.setHasFixedSize(true);
+    recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
+
     list = new ArrayList<>();
+    list2 = new ArrayList<>();
+
     adapter = new MyAdapter(getActivity(), list);
+    adapter2 = new MyAdapter2(getActivity(), list2);
 
 
     recyclerView.setAdapter(adapter);
+    recyclerView2.setAdapter(adapter2);
+
+
+    studentName.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            list2.clear();
+            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                Model2 nameModel = dataSnapshot.getValue(Model2.class);
+                list2.add(nameModel);
+        }
+    }
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
+    });
 
     edit_text_search_bar = v.findViewById(R.id.edit_text_search_bar);
     btn_search = v.findViewById(R.id.btn_search);

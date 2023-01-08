@@ -14,7 +14,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="20dp">
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <EditText
             android:id="@+id/edit_text_search_bar"
             android:layout_width="match_parent"
@@ -31,6 +34,8 @@
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/grey2"
             android:text="Search"/>
+
+
         <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_"
         android:layout_width="match_parent"
