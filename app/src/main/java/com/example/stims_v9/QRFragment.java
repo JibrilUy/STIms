@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -42,7 +44,6 @@ public class QRFragment extends Fragment {
     ImageView imgQR;
     String bitmap_name;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,28 +54,39 @@ public class QRFragment extends Fragment {
             imgQR = (ImageView) v.findViewById(R.id.imgQR);
             btnGenerateQR = (Button) v.findViewById(R.id.btnGenerateQR);
 
+            String inputText = etQR.getText().toString();
 
-            btnGenerateQR.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-                    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 
-                    try {
-                        BitMatrix bitMatrix = multiFormatWriter.encode(etQR.getText().toString(),
-                                BarcodeFormat.QR_CODE, 275,275);
+                btnGenerateQR.setOnClickListener(new View.OnClickListener() {
 
-                        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                        Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                    @Override
+                    public void onClick(View view) {
+                        if(TextUtils.isEmpty(etQR.getText())){
 
-                        imgQR.setImageBitmap(bitmap);
-                        // BULLSHIT ITO
-                        saveImage(bitmap);
-                    } catch (WriterException e){
-                        e.printStackTrace();
+                            Toast.makeText(getActivity(), "NO TEXT", Toast.LENGTH_SHORT).show();
+
+                        }else{
+                            Toast.makeText(getActivity(), "QR ADDED TO GALLERY", Toast.LENGTH_SHORT).show();
+                            MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+
+                            try {
+                                BitMatrix bitMatrix = multiFormatWriter.encode(etQR.getText().toString(),
+                                        BarcodeFormat.QR_CODE, 275, 275);
+
+                                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                                Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+
+                                imgQR.setImageBitmap(bitmap);
+                                // BULLSHIT ITO
+                                saveImage(bitmap);
+                            } catch (WriterException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
-                }
-            });
+                });
+
 
 
         return v;

@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2165" />
+        <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/drawable/STIms_launcher_background.xml" value="0.2165" />
+        <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2165" />
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/activity_show.xml" value="0.20153985507246377" />
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/fragment_blank.xml" value="0.209375" />
@@ -14,6 +17,10 @@
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/item.xml" value="0.20153985507246377" />
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/layout/item2.xml" value="0.17101325352714836" />
         <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/menu/bottom_nav_menu.xml" value="0.209375" />
+        <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/mipmap-anydpi-v26/STIms_launcher.xml" value="0.2165" />
+        <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/mipmap-anydpi-v26/STIms_launcher_round.xml" value="0.2155" />
+        <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2165" />
+        <entry key="..\:/Users/Lisa/Desktop/Android_Java_Project/STIms/STIms-V9/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2165" />
       </map>
     </option>
   </component>

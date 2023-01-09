@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:text="Scan QR Once to Check In Scan Same QR Twice to Check Out" />
+        android:text="Scan QR Once to Check In, Scan Same QR Twice to Check Out" />
 
     <Button
         android:id="@+id/btn_scan"
@@ -19,6 +19,7 @@
         android:layout_gravity="center"
         android:backgroundTint="@color/grey2"
         android:text="@string/string_btn_scan"
+        android:textColor="@color/white"
         />
 
 

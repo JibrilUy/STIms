@@ -6,7 +6,8 @@
     app:cardElevation="8dp"
     app:cardCornerRadius="10dp"
     android:padding="10dp"
-    android:layout_margin="10dp">
+    android:layout_margin="10dp"
+    android:backgroundTint="@color/grey">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -22,7 +23,8 @@
                 android:text="Name: "
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/white"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -30,7 +32,8 @@
                 android:textStyle="bold"
                 android:textSize="17sp"
                 android:layout_marginStart="20dp"
-                android:id="@+id/text_view_name"/>
+                android:id="@+id/text_view_name"
+                android:textColor="@color/white"/>
 
         </LinearLayout>
         <LinearLayout
@@ -43,7 +46,8 @@
                 android:text="Date: "
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/white"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,7 +55,8 @@
                 android:textStyle="bold"
                 android:textSize="17sp"
                 android:layout_marginStart="20dp"
-                android:id="@+id/text_view_date"/>
+                android:id="@+id/text_view_date"
+                android:textColor="@color/white"/>
 
         </LinearLayout>
         <LinearLayout
@@ -63,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:text="Check In: "
                 android:textStyle="bold"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:layout_marginLeft="10dp"/>
             <TextView
@@ -70,6 +76,7 @@
                 android:layout_height="wrap_content"
                 android:text="12:00"
                 android:textStyle="bold"
+                android:textColor="@color/white"
                 android:textSize="17sp"
                 android:layout_marginStart="20dp"
                 android:id="@+id/text_view_check_in"/>
@@ -82,6 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Check Out: "
+                android:textColor="@color/white"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:layout_marginLeft="10dp"/>
@@ -90,6 +98,7 @@
                 android:layout_height="wrap_content"
                 android:text="12:00"
                 android:textStyle="bold"
+                android:textColor="@color/white"
                 android:textSize="17sp"
                 android:layout_marginStart="20dp"
                 android:id="@+id/text_view_check_out"/>

@@ -70,7 +70,7 @@ public class ScanFragment extends Fragment {
                     //for the button CANCEL
                     builder.setPositiveButton("CANCEL", (dialogInterface, i) -> dialogInterface.dismiss());
                     //for the button Check In
-                    builder.setNegativeButton("CHECK IN", (dialogInterface, i) -> {
+                    builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
                         String scanResult = result.getContents();
 
                         DatabaseReference scanRes = root.child(scanResult);
