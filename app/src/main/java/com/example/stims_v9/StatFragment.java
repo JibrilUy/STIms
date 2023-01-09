@@ -1,5 +1,6 @@
 package com.example.stims_v9;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -37,9 +38,7 @@ public class StatFragment extends Fragment {
 
 
     private MyAdapter adapter;
-    private MyAdapter2 adapter2;
     private ArrayList<Model> list;
-    private ArrayList<Model2> list2;
 
 
     Button btn_search;
@@ -55,76 +54,28 @@ public class StatFragment extends Fragment {
 
 
     RecyclerView recyclerView = v.findViewById(R.id.recycler_view_);
-    RecyclerView recyclerView2 = v.findViewById(R.id.recycler_view_2);
 
     recyclerView.setHasFixedSize(true);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-    recyclerView2.setHasFixedSize(true);
-    recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
+
 
     list = new ArrayList<>();
-    list2 = new ArrayList<>();
 
 
     adapter = new MyAdapter(getActivity(), list);
-    adapter2 = new MyAdapter2(getActivity(), list2);
 
 
     recyclerView.setAdapter(adapter);
-    recyclerView2.setAdapter(adapter2);
 
-    Query query = studentName.child("Users");
 
-    searchView = v.findViewById(R.id.search_view_bar);
-//    AutoCompleteTextView autoCompleteTextView = searchView.findViewById(R.id.autoCompleteTextView);
 
-    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+    Button btn_search_student = v.findViewById(R.id.btn_student_search);
+    btn_search_student.setOnClickListener(new View.OnClickListener() {
         @Override
-        public boolean onQueryTextSubmit(String s) {
-            searchResultList.clear();
-
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        String name = snapshot.child("Users").getValue(String.class);
-                        searchResultList.add(name);
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
-            return false;
-        }
-
-        @Override
-        public boolean onQueryTextChange(String s) {
-
-            return false;
-        }
-    });
-
-
-//    ArrayAdapter<String> adapter3 = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list2);
-//    autoCompleteTextView.setAdapter(adapter3);
-
-
-    studentName.addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot) {
-            list2.clear();
-            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                Model2 nameModel = dataSnapshot.getValue(Model2.class);
-                list2.add(nameModel);
-        }
-    }
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-
+        public void onClick(View view) {
+            Intent intent = new Intent(getActivity(), StudentList.class);
+            startActivity(intent);
         }
     });
 
@@ -153,7 +104,6 @@ public class StatFragment extends Fragment {
             });
         }
     });
-//just to push 4
 
         return v;
     }

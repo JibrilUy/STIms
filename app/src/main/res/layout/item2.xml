@@ -5,6 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="8dp"
     app:cardCornerRadius="10dp"
+    android:padding="10dp"
+    android:layout_margin="5dp"
     android:backgroundTint="@color/grey">
 <LinearLayout
     android:layout_width="match_parent"
@@ -20,7 +22,7 @@
         android:text="Student: "
         android:textStyle="bold"
         android:textSize="17sp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:textColor="@color/white"/>
         <TextView
             android:layout_width="wrap_content"
@@ -32,5 +34,6 @@
             android:id="@+id/text_view_student_name"
             android:textColor="@color/white"/>
     </LinearLayout>
+
 </LinearLayout>
 </androidx.cardview.widget.CardView>
