@@ -10,13 +10,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -37,9 +41,11 @@ public class StatFragment extends Fragment {
     private ArrayList<Model> list;
     private ArrayList<Model2> list2;
 
+
     Button btn_search;
     EditText edit_text_search_bar;
-    List<String> scanResultNodes = new ArrayList<>();
+    SearchView searchView;
+    List<String> searchResultList = new ArrayList<>();
 
 @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,12 +66,51 @@ public class StatFragment extends Fragment {
     list = new ArrayList<>();
     list2 = new ArrayList<>();
 
+
     adapter = new MyAdapter(getActivity(), list);
     adapter2 = new MyAdapter2(getActivity(), list2);
 
 
     recyclerView.setAdapter(adapter);
     recyclerView2.setAdapter(adapter2);
+
+    Query query = studentName.child("Users");
+
+    searchView = v.findViewById(R.id.search_view_bar);
+//    AutoCompleteTextView autoCompleteTextView = searchView.findViewById(R.id.autoCompleteTextView);
+
+    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String s) {
+            searchResultList.clear();
+
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        String name = snapshot.child("Users").getValue(String.class);
+                        searchResultList.add(name);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String s) {
+
+            return false;
+        }
+    });
+
+
+//    ArrayAdapter<String> adapter3 = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list2);
+//    autoCompleteTextView.setAdapter(adapter3);
 
 
     studentName.addValueEventListener(new ValueEventListener() {
