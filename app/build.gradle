@@ -19,8 +19,8 @@ android {
 
         //I don't know what this is
         multiDexEnabled true
-        minSdkVersion 19
-        //still don't know
+        minSdkVersion 21
+        //this is for the API
     }
 
     buildTypes {

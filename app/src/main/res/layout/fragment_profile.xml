@@ -6,41 +6,50 @@
     tools:context=".ProfileFragment"
     android:background="@color/grey">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/profile" />
+        android:orientation="vertical">
+
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/etUsername"
-        android:layout_marginTop="200dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
+        android:layout_marginTop="140dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:textColorHint="@color/white"
         android:textColor="@color/white"
         android:hint="USERNAME"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/etPassword"
-        android:layout_marginTop="265dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:hint="PASSWORD"
-        android:textColor="@color/white"
-        android:password="true"/>
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="PASSWORD"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:textColorHint="@color/white" />
 
-    <Button
+        <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="350dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
         android:text="SIGN IN"
+        android:textColorHint="@color/white"
         android:backgroundTint="@color/grey2"
         />
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/stimmy_under_development_layer" />
+    </LinearLayout>
 
 </FrameLayout>

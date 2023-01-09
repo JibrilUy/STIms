@@ -54,6 +54,7 @@ public class QRFragment extends Fragment {
             imgQR = (ImageView) v.findViewById(R.id.imgQR);
             btnGenerateQR = (Button) v.findViewById(R.id.btnGenerateQR);
 
+
             String inputText = etQR.getText().toString();
 
 

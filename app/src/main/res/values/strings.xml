@@ -8,4 +8,6 @@
     <string name="string_btn_scan">SCAN</string>
     <string name="Add">add</string>
     <string name="generate_amp_save_qr"><![CDATA[GENERATE & SAVE QR]]></string>
+    <string name="save_qr">SAVE QR</string>
+    <string name="generate_qr">GENERATE QR</string>
 </resources>

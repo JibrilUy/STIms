@@ -6,31 +6,31 @@
     tools:context=".QRFragment"
     android:background="@color/grey">
 
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="@color/white"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/etQR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="170dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:textColor="@color/white"/>
+        android:layout_marginTop="100dp"
+        android:textColor="@color/white"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        />
 
     <Button
         android:id="@+id/btnGenerateQR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="230dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
         android:backgroundTint="@color/grey2"
         android:hint="@string/generate_amp_save_qr"
-        android:textColorHint="@color/white"/>
+        android:layout_marginTop="20dp"
+        android:textColorHint="@color/white"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="80dp"/>
 
 
     <ImageView
@@ -38,7 +38,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/imgQR"
         android:adjustViewBounds="true"
-        android:layout_marginTop="370dp"
-        android:scaleType="fitCenter"/>
-
+        android:scaleType="fitCenter"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="100dp"/>
+</LinearLayout>
 </FrameLayout>
