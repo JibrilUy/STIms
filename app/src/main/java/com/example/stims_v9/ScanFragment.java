@@ -34,14 +34,13 @@ public class ScanFragment extends Fragment {
     String currentTime = new SimpleDateFormat("h:mm:a", Locale.getDefault()).format(new Date());
     String time = currentTime;
     String date = currentDate;
-
+    String nameModel;
     Button btn_scan ;
 
     //Initialize FirebaseDatabase
     private final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private final DatabaseReference root = studentDatabase.getReference();
-    private final DatabaseReference userRootRef = root.child("Users");
-    List<String> childNodeValues = new ArrayList<>();
+
 
 
     @Override
@@ -57,6 +56,10 @@ public class ScanFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_scan, container, false);
+
+        ArrayList<String> list2;
+        list2 = new ArrayList<>();
+
         // Register the launcher and result handler
         final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
                 result -> {
@@ -73,8 +76,10 @@ public class ScanFragment extends Fragment {
                     builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
                         String scanResult = result.getContents();
 
-                        DatabaseReference scanRes = root.child(scanResult);
-                        DatabaseReference dateNodeRef = scanRes.child(date);
+                        DatabaseReference scanRes = root.child("Logs").child(date);
+                        DatabaseReference dateNodeRef = scanRes.child(scanResult);
+
+                        DatabaseReference userRes = root.child("Users").child(scanResult);
 
                         dateNodeRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -84,33 +89,36 @@ public class ScanFragment extends Fragment {
 
                                 }else{
                                     dateNodeRef.child("Date").setValue(date);
-                                    userRootRef.push().child("student_name").setValue(scanResult);
                                     dateNodeRef.child("Name").setValue(scanResult);
                                     dateNodeRef.child("Check_In").setValue(time).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check In Successfully", Toast.LENGTH_SHORT).show());
                                 }
+
+
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
                             }
                         });
 
+                        userRes.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                                    nameModel = childSnapshot.getValue().toString();
+                                    list2.add(nameModel);
+                                }
+                                if (!list2.contains(scanResult)) {
+                                    userRes.child("student_name").setValue(scanResult);
+                                }
+                            }
 
-//                        userRootRef.addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-//                                    String childNodeValue = dataSnapshot.getValue(String.class);
-//                                    childNodeValues.add(childNodeValue);
-//                                }
-//                                if(!snapshot.hasChild(String.valueOf(childNodeValues)));
-//                                userRootRef.push().child("student_name").setValue(scanResult);
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError error) {
-//
-//                            }
-//                        });
+                                @Override
+                                public void onCancelled (@NonNull DatabaseError error){
+
+                                }
+
+                        });
+
 
                     });
                     //to show it duh
