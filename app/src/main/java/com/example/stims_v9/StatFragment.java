@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.SearchView;
 
@@ -24,7 +25,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class StatFragment extends Fragment {
@@ -41,7 +45,7 @@ public class StatFragment extends Fragment {
     private ArrayList<Model> list;
 
 
-    Button btn_search;
+    Button btn_search, btn_calendar_view, btn_search_student;
     EditText edit_text_search_bar;
     SearchView searchView;
     List<String> searchResultList = new ArrayList<>();
@@ -58,19 +62,30 @@ public class StatFragment extends Fragment {
     recyclerView.setHasFixedSize(true);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-
     list = new ArrayList<>();
-
-
     adapter = new MyAdapter(getActivity(), list);
-
 
     recyclerView.setAdapter(adapter);
 
+    CalendarView calendarView = v.findViewById(R.id.calendarView);
+//    calendarView.setDate(Long.MIN_VALUE, true, true);
 
+    btn_calendar_view = v.findViewById(R.id.btn_calendar_view);
+    btn_calendar_view.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int visibility = calendarView.getVisibility();
+            if (visibility == View.GONE || visibility == View.INVISIBLE) {
+                calendarView.setVisibility(View.VISIBLE);
+                btn_calendar_view.setText("Hide Calendar");
+            } else {
+                calendarView.setVisibility(View.GONE);
+                btn_calendar_view.setText("Show Calendar");
+            }
+        }
+    });
 
-    Button btn_search_student = v.findViewById(R.id.btn_student_search);
+    btn_search_student = v.findViewById(R.id.btn_student_search);
     btn_search_student.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -79,14 +94,50 @@ public class StatFragment extends Fragment {
         }
     });
 
+    calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        @Override
+        public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, dayOfMonth);
+            long date = calendar.getTimeInMillis();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMMM, d,EEEE");
+            String dateRef = sdf.format(new Date(date));
+
+            DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Logs");
+            DatabaseReference datePickerRef = root.child(dateRef);
+
+            datePickerRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    list.clear();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        Model model = dataSnapshot.getValue(Model.class);
+                        list.add(model);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
+    });
+
     edit_text_search_bar = v.findViewById(R.id.edit_text_search_bar);
     btn_search = v.findViewById(R.id.btn_search);
     btn_search.setOnClickListener(new View.OnClickListener() {
+
         @Override
         public void onClick(View view) {
+
             String searchResult = edit_text_search_bar.getText().toString();
-            DatabaseReference dateNodeRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference(searchResult);
-            dateNodeRef.addValueEventListener(new ValueEventListener() {
+            DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Logs");
+            DatabaseReference datePickerRef = root.child("something");
+            DatabaseReference userRoot = datePickerRef.child(searchResult).getRef();
+
+
+            userRoot.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     list.clear();
@@ -102,9 +153,9 @@ public class StatFragment extends Fragment {
 
                 }
             });
+
         }
     });
-
         return v;
     }
 }

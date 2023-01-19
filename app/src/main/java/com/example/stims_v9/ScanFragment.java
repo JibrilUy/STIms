@@ -79,6 +79,9 @@ public class ScanFragment extends Fragment {
                         DatabaseReference scanRes = root.child("Logs").child(date);
                         DatabaseReference dateNodeRef = scanRes.child(scanResult);
 
+                        DatabaseReference searchRootRef = root.child("Scans").child(scanResult);
+                        DatabaseReference searchRef = searchRootRef.child(date);
+
                         DatabaseReference userRes = root.child("Users").child(scanResult);
 
                         dateNodeRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -86,11 +89,14 @@ public class ScanFragment extends Fragment {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.child("Check_In").exists()){
                                     dateNodeRef.child("Check_Out").setValue(time).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check Out Successfully", Toast.LENGTH_SHORT).show());
-
+                                    searchRef.child("Check_Out").setValue(time);
                                 }else{
                                     dateNodeRef.child("Date").setValue(date);
                                     dateNodeRef.child("Name").setValue(scanResult);
                                     dateNodeRef.child("Check_In").setValue(time).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check In Successfully", Toast.LENGTH_SHORT).show());
+                                    searchRef.child("Date").setValue(date);
+                                    searchRef.child("Name").setValue(scanResult);
+                                    searchRef.child("Check_In").setValue(time);
                                 }
 
 

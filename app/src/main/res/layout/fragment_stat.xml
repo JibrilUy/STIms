@@ -13,7 +13,27 @@
         android:orientation="vertical"
         android:layout_marginTop="20dp">
 
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
 
+
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_view"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:hint="Search"
+            android:iconifiedByDefault="false"
+            android:queryHint="Search"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            />
 
         <EditText
             android:id="@+id/edit_text_search_bar"
@@ -24,6 +44,16 @@
             android:layout_marginEnd="10dp"
             android:textColorHint="@color/white"
             android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/btn_calendar_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/grey2"
+            android:text="Hide Calendar"
+            android:textColorHint="@color/white"/>
 
         <Button
             android:id="@+id/btn_search"
@@ -44,6 +74,8 @@
             android:backgroundTint="@color/grey2"
             android:text="STUDENTS"
             android:textColorHint="@color/white"/>
+
+
 
         <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_"
