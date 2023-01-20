@@ -48,8 +48,7 @@ public class ScanFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    //something to view in git
-    // trying to make a branch
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -134,6 +133,7 @@ public class ScanFragment extends Fragment {
         btn_scan = v.findViewById(R.id.btn_scan);
         btn_scan.setOnClickListener(view -> {
             Toast.makeText(getActivity(), "CAMERA ON", Toast.LENGTH_SHORT).show();
+
             //Initialize Scan
             barcodeLauncher.launch(new ScanOptions());
             //Initialize Intent Integrator/Scan Options

@@ -35,15 +35,6 @@
             android:imeOptions="actionSearch"
             />
 
-        <EditText
-            android:id="@+id/edit_text_search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Search"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:textColorHint="@color/white"
-            android:textColor="@color/white"/>
 
         <Button
             android:id="@+id/btn_calendar_view"
@@ -52,17 +43,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/grey2"
-            android:text="Hide Calendar"
-            android:textColorHint="@color/white"/>
-
-        <Button
-            android:id="@+id/btn_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/grey2"
-            android:text="Search"
+            android:text="Show Calendar"
             android:textColorHint="@color/white"/>
 
         <Button

@@ -43,11 +43,11 @@ public class StatFragment extends Fragment {
 
     private MyAdapter adapter;
     private ArrayList<Model> list;
+    ArrayList<String> suggestions;
 
 
-    Button btn_search, btn_calendar_view, btn_search_student;
-    EditText edit_text_search_bar;
-    SearchView searchView;
+    Button btn_calendar_view, btn_search_student;
+    SearchView search_view;
     List<String> searchResultList = new ArrayList<>();
 
 @Override
@@ -68,8 +68,7 @@ public class StatFragment extends Fragment {
     recyclerView.setAdapter(adapter);
 
     CalendarView calendarView = v.findViewById(R.id.calendarView);
-//    calendarView.setDate(Long.MIN_VALUE, true, true);
-
+    calendarView.setVisibility(View.GONE);
     btn_calendar_view = v.findViewById(R.id.btn_calendar_view);
     btn_calendar_view.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -124,20 +123,27 @@ public class StatFragment extends Fragment {
         }
     });
 
-    edit_text_search_bar = v.findViewById(R.id.edit_text_search_bar);
-    btn_search = v.findViewById(R.id.btn_search);
-    btn_search.setOnClickListener(new View.OnClickListener() {
+    ArrayList<String> suggestionsList = new ArrayList<>();
+
+    ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, suggestionsList);
+
+//    search_view.setSuggestionsAdapter(adapter2);
+
+    search_view = v.findViewById(R.id.search_view);
+    search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String s) {
+            return false;
+        }
 
         @Override
-        public void onClick(View view) {
+        public boolean onQueryTextChange(String s) {
 
-            String searchResult = edit_text_search_bar.getText().toString();
-            DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Logs");
-            DatabaseReference datePickerRef = root.child("something");
-            DatabaseReference userRoot = datePickerRef.child(searchResult).getRef();
+            String searchText = s.toString();
+            DatabaseReference searchRootRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Scans");
+            DatabaseReference searchRef = searchRootRef.child(s);
 
-
-            userRoot.addValueEventListener(new ValueEventListener() {
+            searchRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     list.clear();
@@ -150,12 +156,17 @@ public class StatFragment extends Fragment {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
                 }
             });
+            return false;
+
 
         }
+
     });
+
+
+
         return v;
     }
 }
