@@ -1,23 +1,32 @@
 package com.example.stims_v9;
 
 import android.content.Intent;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.TextView;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,8 +54,8 @@ public class StatFragment extends Fragment {
     private ArrayList<Model> list;
     ArrayList<String> suggestions;
 
-
-    Button btn_calendar_view, btn_search_student;
+    MaterialButton btn_search_student, btn_calendar_view;
+    TextInputEditText search_edit_text;
     SearchView search_view;
     List<String> searchResultList = new ArrayList<>();
 
@@ -79,7 +88,7 @@ public class StatFragment extends Fragment {
                 btn_calendar_view.setText("Hide Calendar");
             } else {
                 calendarView.setVisibility(View.GONE);
-                btn_calendar_view.setText("Show Calendar");
+                btn_calendar_view.setText("");
             }
         }
     });
@@ -123,11 +132,27 @@ public class StatFragment extends Fragment {
         }
     });
 
-    ArrayList<String> suggestionsList = new ArrayList<>();
+    search_edit_text = v.findViewById(R.id.search_edit_text);
+    String searchInput = search_edit_text.getText().toString();
 
-    ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, suggestionsList);
+    search_edit_text.addTextChangedListener(new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-//    search_view.setSuggestionsAdapter(adapter2);
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    });
+
+
 
     search_view = v.findViewById(R.id.search_view);
     search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -139,7 +164,6 @@ public class StatFragment extends Fragment {
         @Override
         public boolean onQueryTextChange(String s) {
 
-            String searchText = s.toString();
             DatabaseReference searchRootRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Scans");
             DatabaseReference searchRef = searchRootRef.child(s);
 
@@ -158,6 +182,7 @@ public class StatFragment extends Fragment {
                 public void onCancelled(@NonNull DatabaseError error) {
                 }
             });
+
             return false;
 
 

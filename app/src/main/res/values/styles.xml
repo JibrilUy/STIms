@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="CustomCaptureTheme" parent="zxing_CaptureTheme">
-        <item name="android:windowActionBar">false</item>
-
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here -->
+        <item name="colorPrimary">@color/grey</item>
+        <item name="colorPrimaryDark">@color/grey2</item>
+        <item name="colorAccent">@color/white</item>
 
     </style>
 </resources>
