@@ -23,21 +23,51 @@
 
 
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="end">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="end">
+
+    <Spinner
+    android:id="@+id/spinner_violations_stat_fragment"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="end"
+    android:layout_marginEnd="15dp"
+
+    />
+    <Spinner
+        android:id="@+id/spinner_subject_stat_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="end"
+        android:layout_marginEnd="15dp"
+
+        />
+
+</LinearLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="10dp"
             android:gravity="end">
 
 
         <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_view"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
+                android:maxWidth="270dp"
                 android:hint="Search"
                 android:iconifiedByDefault="true"
                 android:imeOptions="actionSearch"
@@ -72,7 +102,7 @@
 
         </LinearLayout>
 
-
+    </LinearLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView

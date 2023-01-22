@@ -3,24 +3,113 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ScanFragment"
     android:background="@color/grey">
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="40dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+
+    >
+    <EditText
+        android:id="@+id/edit_text_subject_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="Add Subjects"
+        />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_add_subjects"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_baseline_add_24"
+        app:iconTint="@color/white"
+        android:backgroundTint="@color/grey2"
+
+        />
+    <Spinner
+        android:id="@+id/spinner_subjects"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        />
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+
+        >
+        <EditText
+            android:id="@+id/edit_text_violation_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Add Violations"
+            />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_add_violations"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_baseline_add_24"
+            app:iconTint="@color/white"
+            android:backgroundTint="@color/grey2"
+
+            />
+        <Spinner
+            android:id="@+id/spinner_violations"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            />
+    </LinearLayout>
+
+    </LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="bottom"
+    android:gravity="center"
+    android:layout_marginBottom="150dp"
+
+    >
+    <TextView
+        android:id="@+id/text_view_subject_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Jibril"
         android:textColor="@color/white"
-        android:text="Scan QR Once to Check In, Scan Same QR Twice to Check Out" />
+        />
 
     <Button
         android:id="@+id/btn_scan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:gravity="center"
         android:backgroundTint="@color/grey2"
         android:text="@string/string_btn_scan"
         android:textColor="@color/white"
         />
+
+
+
+
+</LinearLayout>
 
 
 

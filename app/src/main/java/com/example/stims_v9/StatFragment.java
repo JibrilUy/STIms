@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -24,6 +25,8 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.FilterQueryProvider;
+import android.widget.Spinner;
+
 import androidx.appcompat.widget.SearchView;
 
 
@@ -53,15 +56,22 @@ public class StatFragment extends Fragment {
     private final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private final DatabaseReference root = studentDatabase.getReference();
     private final DatabaseReference studentName = root.child("Users");
+    private final DatabaseReference subjectsRef = root.child("Subjects");
+    private final DatabaseReference violationsRef = root.child("Violations");
 
 
+
+    Spinner spinner_subject_stat_fragment, spinner_violations_stat_fragment;
 
     private MyAdapter adapter;
     private ArrayList<Model> list;
+    ArrayList<String> subjectList;
+    ArrayList<String> violationList;
+
+
 
     MaterialButton btn_search_student, btn_calendar_view;
     SearchView search_view;
-    List<String> searchResultList = new ArrayList<>();
 
 @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,6 +87,8 @@ public class StatFragment extends Fragment {
 
     list = new ArrayList<>();
     adapter = new MyAdapter(getActivity(), list);
+    subjectList = new ArrayList<>();
+    violationList = new ArrayList<>();
 
     recyclerView.setAdapter(adapter);
 
@@ -133,6 +145,103 @@ public class StatFragment extends Fragment {
             });
         }
     });
+
+
+    spinner_subject_stat_fragment = v.findViewById(R.id.spinner_subject_stat_fragment);
+    subjectsRef.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            subjectList.clear();
+            for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                String value = childSnapshot.getValue(String.class);
+                subjectList.add(value);
+            }
+            ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
+            spinner_subject_stat_fragment.setAdapter(subjectAdapter);
+        }
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
+    });
+    spinner_subject_stat_fragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            String selectedSubject = spinner_subject_stat_fragment.getSelectedItem().toString();
+            DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                    .getReference("SubjectSelected");
+            DatabaseReference subjectsReference = root.child(selectedSubject);
+
+            subjectsReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    list.clear();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        Model model = dataSnapshot.getValue(Model.class);
+                        list.add(model);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+        }
+    });
+
+
+    spinner_violations_stat_fragment = v.findViewById(R.id.spinner_violations_stat_fragment);
+    violationsRef.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            violationList.clear();
+            for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                String value = childSnapshot.getValue(String.class);
+                violationList.add(value);
+            }
+            ArrayAdapter<String> violationAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, violationList);
+            spinner_violations_stat_fragment.setAdapter(violationAdapter);
+        }
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
+    });
+    spinner_violations_stat_fragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            String selectedViolations = spinner_violations_stat_fragment.getSelectedItem().toString();
+            DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                    .getReference("ViolationSelected");
+            DatabaseReference violationReference = root.child(selectedViolations);
+
+            violationReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    list.clear();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        Model model = dataSnapshot.getValue(Model.class);
+                        list.add(model);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
+        }
+    });
+
+
 
     search_view = v.findViewById(R.id.search_view);
 
