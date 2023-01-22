@@ -82,6 +82,8 @@ public class ScanFragment extends Fragment {
                         DatabaseReference searchRef = searchRootRef.child(date);
 
                         DatabaseReference userRes = root.child("Users").child(scanResult);
+                        DatabaseReference suggestionRef = root.child("Suggestions");
+
 
                         dateNodeRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -114,6 +116,7 @@ public class ScanFragment extends Fragment {
                                 }
                                 if (!list2.contains(scanResult)) {
                                     userRes.child("student_name").setValue(scanResult);
+                                    suggestionRef.push().setValue(scanResult);
                                 }
                             }
 

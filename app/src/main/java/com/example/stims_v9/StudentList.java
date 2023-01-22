@@ -25,8 +25,8 @@ public class StudentList extends AppCompatActivity {
         setContentView(R.layout.activity_student_list);
 
         //Initiating Firebase Database
-        final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        final DatabaseReference root = studentDatabase.getReference();
+        DatabaseReference studentNameDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference("Users");
 
         MyAdapter2 adapter2;
 
@@ -41,7 +41,6 @@ public class StudentList extends AppCompatActivity {
 
         adapter2 = new MyAdapter2(this, list2);
 
-        DatabaseReference studentName = root.child("Users");
 
 
         Button btn_refresh = findViewById(R.id.btn_refresh);
@@ -50,7 +49,7 @@ public class StudentList extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                studentName.addValueEventListener(new ValueEventListener() {
+                studentNameDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list2.clear();
