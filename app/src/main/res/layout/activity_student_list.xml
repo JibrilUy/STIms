@@ -5,22 +5,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/grey"
     tools:context=".StudentList">
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_refresh"
-        android:textColorHint="@color/white"
-        android:layout_gravity="right"
-        android:background="@drawable/ic_baseline_refresh_24"/>
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="20dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_refresh"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/grey2"
+            app:icon="@drawable/ic_baseline_refresh_24"
+            app:iconTint="@color/white"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_exit"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/grey2"
+            android:textColorHint="@color/white"
+            app:icon="@drawable/ic_baseline_cancel_24"
+            app:iconTint="@color/white" />
+
+    </LinearLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-
 
 
 </LinearLayout>

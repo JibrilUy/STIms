@@ -1,5 +1,6 @@
 package com.example.stims_v9;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -88,10 +89,8 @@ public class StatFragment extends Fragment {
             int visibility = calendarView.getVisibility();
             if (visibility == View.GONE || visibility == View.INVISIBLE) {
                 calendarView.setVisibility(View.VISIBLE);
-                btn_calendar_view.setText("Hide Calendar");
             } else {
                 calendarView.setVisibility(View.GONE);
-                btn_calendar_view.setText("");
             }
         }
     });
@@ -136,6 +135,15 @@ public class StatFragment extends Fragment {
     });
 
     search_view = v.findViewById(R.id.search_view);
+
+    search_view.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            btn_calendar_view.setVisibility(View.GONE);
+            btn_search_student.setVisibility(View.GONE);
+        }
+    });
+
     search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
 
@@ -169,8 +177,22 @@ public class StatFragment extends Fragment {
             SimpleCursorAdapter adapter3 = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, cursor,
                     new String[]{"student_name"}, new int[]{android.R.id.text1}, 0);
 
+            search_view.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                @Override
+                public boolean onSuggestionSelect(int position) {
+                    return false;
+                }
 
+                @Override
+                public boolean onSuggestionClick(int position) {
+                    Cursor cursor = (Cursor) search_view.getSuggestionsAdapter().getItem(position);
 
+                    //Column must not be 0
+                    @SuppressLint("Range") String suggestion = cursor.getString(cursor.getColumnIndex("student_name"));
+                    search_view.setQuery(suggestion, false);
+                    return false;
+                }
+            });
             search_view.setSuggestionsAdapter(adapter3);
 
             DatabaseReference searchRootRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")

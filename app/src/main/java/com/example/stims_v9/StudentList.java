@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,9 +42,9 @@ public class StudentList extends AppCompatActivity {
 
         adapter2 = new MyAdapter2(this, list2);
 
+        MaterialButton btn_refresh, btn_exit;
 
-
-        Button btn_refresh = findViewById(R.id.btn_refresh);
+        btn_refresh = findViewById(R.id.btn_refresh);
         btn_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,7 +66,14 @@ public class StudentList extends AppCompatActivity {
 
                     }
                 });
+            }
+        });
 
+        btn_exit = findViewById(R.id.btn_exit);
+        btn_exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
 
