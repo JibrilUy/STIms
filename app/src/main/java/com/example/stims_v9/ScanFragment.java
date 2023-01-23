@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
@@ -43,13 +45,13 @@ public class ScanFragment extends Fragment {
     String nameModel, selectedSubject, selectedViolations;
     Button btn_scan ;
     EditText edit_text_subject_add, edit_text_violations_add;
-    MaterialButton btn_add_subjects, btn_add_violation;
+    MaterialButton btn_add_subjects, btn_add_violation, btn_subjects;
     Spinner spinner_subjects, spinner_violations;
     TextView text_view_subject_selected;
+    private TextViewUpdater textViewUpdater;
+
 
     ArrayList<String> list2;
-    ArrayList<String> subjectList;
-    ArrayList<String> violationList;
 
 
     //Initialize FirebaseDatabase
@@ -75,104 +77,23 @@ public class ScanFragment extends Fragment {
 
         list2 = new ArrayList<>();
 
-        subjectList = new ArrayList<>();
-        violationList = new ArrayList<>();
 
+        textViewUpdater = new TextViewUpdater();
+        text_view_subject_selected = v.findViewById(R.id.text_view_subject_selected);
 
-        edit_text_subject_add = v.findViewById(R.id.edit_text_subject_add);
-
-        btn_add_subjects = v.findViewById(R.id.btn_add_subjects);
-        btn_add_subjects.setOnClickListener(new View.OnClickListener() {
+        btn_subjects = v.findViewById(R.id.btn_subjects);
+        btn_subjects.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String subjectToAdd = edit_text_subject_add.getText().toString();
-                if(!subjectToAdd.isEmpty()) {
-                    subjectsRef.push().setValue(subjectToAdd).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Subject Added",
-                            Toast.LENGTH_SHORT).show());
-                }else{
-                    Toast.makeText(getActivity(), "Please Enter Subject", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-
-
-        edit_text_violations_add = v.findViewById(R.id.edit_text_violation_add);
-
-        btn_add_violation = v.findViewById(R.id.btn_add_violations);
-        btn_add_violation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String violationsToAdd = edit_text_violations_add.getText().toString();
-                if(!violationsToAdd.isEmpty()) {
-                    violationsRef.push().setValue(violationsToAdd).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Violation Added",
-                            Toast.LENGTH_SHORT).show());
-                }else{
-                    Toast.makeText(getActivity(), "Please Enter Violations", Toast.LENGTH_SHORT).show();
-                }
+                replaceFragment(new SubjectFragment());
             }
         });
 
         text_view_subject_selected = v.findViewById(R.id.text_view_subject_selected);
 
-        spinner_subjects = v.findViewById(R.id.spinner_subjects);
-        subjectsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                subjectList.clear();
-                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    String value = childSnapshot.getValue(String.class);
-                    subjectList.add(value);
-                }
-                ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
-                spinner_subjects.setAdapter(subjectAdapter);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        spinner_subjects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            selectedSubject = spinner_subjects.getSelectedItem().toString();
-            text_view_subject_selected.setText(selectedSubject);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
 
 
-        spinner_violations = v.findViewById(R.id.spinner_violations);
-        violationsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                violationList.clear();
-                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    String value = childSnapshot.getValue(String.class);
-                    violationList.add(value);
-                }
-                ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, violationList);
-                spinner_violations.setAdapter(subjectAdapter);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
-
-        spinner_violations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedViolations = spinner_violations.getSelectedItem().toString();
-                text_view_subject_selected.setText(selectedViolations);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
 
 
 
@@ -287,6 +208,21 @@ public class ScanFragment extends Fragment {
         });
         return v;
     }
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
+    }
+    public void textViewManager(String string){
+        TextView textView = getView().findViewById(R.id.text_view_subject_selected);
+        textView.setText(string);
+    }
+
+
+
+
+
 }
 
 

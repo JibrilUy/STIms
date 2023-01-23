@@ -6,78 +6,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ScanFragment"
     android:background="@color/grey">
-    <LinearLayout
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="40dp"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp"
-
-    >
-    <EditText
-        android:id="@+id/edit_text_subject_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="Add Subjects"
-        />
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_add_subjects"
-        android:layout_width="55dp"
-        android:layout_height="wrap_content"
-        app:icon="@drawable/ic_baseline_add_24"
-        app:iconTint="@color/white"
-        android:backgroundTint="@color/grey2"
-
-        />
-    <Spinner
-        android:id="@+id/spinner_subjects"
-        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        />
-</LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-
-        >
-        <EditText
-            android:id="@+id/edit_text_violation_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="Add Violations"
-            />
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_add_violations"
-            android:layout_width="55dp"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_baseline_add_24"
-            app:iconTint="@color/white"
-            android:backgroundTint="@color/grey2"
-
-            />
-        <Spinner
-            android:id="@+id/spinner_violations"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            />
-    </LinearLayout>
-
-    </LinearLayout>
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -106,6 +45,16 @@
         android:textColor="@color/white"
         />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_subjects"
+        android:layout_width="135dp"
+        android:layout_height="55dp"
+        app:icon="@drawable/ic_baseline_add_24"
+        android:text="Subject"
+        android:textColor="@color/white"
+        app:iconTint="@color/white"
+        android:backgroundTint="@color/grey2"
+        />
 
 
 
