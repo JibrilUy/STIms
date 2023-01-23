@@ -3,90 +3,158 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SubjectFragment"
+    android:layout_marginBottom="300dp"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/grey"
         android:layout_centerVertical="true"
+        android:gravity="center"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="10dp"
-            android:orientation="horizontal"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_exit_subject"
+            android:layout_width="55dp"
+            android:layout_height="50dp"
+            android:layout_above="@id/linear_layout_menu_whole"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="7dp"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/grey"
 
-            >
 
-            <EditText
-                android:id="@+id/edit_text_subject_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Add Subjects" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_add_subjects"
-
-                android:layout_width="55dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/grey2"
-
-                />
-
-            <Spinner
-                android:id="@+id/spinner_subjects"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+            app:icon="@drawable/ic_baseline_cancel_24" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/linear_layout_menu_whole"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:orientation="horizontal"
+            android:background="@color/grey3"
+            android:orientation="vertical">
 
-            >
 
-            <EditText
-                android:id="@+id/edit_text_violation_add"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Add Violations" />
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_add_violations"
 
-                android:layout_width="55dp"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/spinner_subjects"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+
+                    <EditText
+                        android:id="@+id/edit_text_subject_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="Enter Subjects" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_delete_subjects"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:text="Delete Subject"
+                        android:textColor="@color/white"
+                        app:strokeColor="@color/grey"
+                        app:strokeWidth="3dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_add_subjects"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:backgroundTint="@color/grey"
+                        android:text="Add Subject"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/grey2"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <Spinner
-                android:id="@+id/spinner_violations"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
+                    <Spinner
+                        android:id="@+id/spinner_violations"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+
+                    <EditText
+                        android:id="@+id/edit_text_violation_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Enter Violations" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_delete_violations"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:text="Delete Violation"
+                        android:textColor="@color/white"
+                        app:strokeColor="@color/grey"
+                        app:strokeWidth="3dp"
+
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_add_violations"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:backgroundTint="@color/white"
+                        android:text="Add Violation"
+                        android:textColor="@color/grey"
+
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
-
-    </LinearLayout>
 
     </RelativeLayout>
 

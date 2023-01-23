@@ -68,7 +68,7 @@ public class StatFragment extends Fragment {
     ArrayList<String> subjectList;
     ArrayList<String> violationList;
 
-
+    String selectedSubject, selectedViolation;
 
     MaterialButton btn_search_student, btn_calendar_view;
     SearchView search_view;
@@ -79,6 +79,8 @@ public class StatFragment extends Fragment {
         // Inflate the layout for this fragment
     View v = inflater.inflate(R.layout.fragment_stat, container, false);
 
+    spinner_subject_stat_fragment = v.findViewById(R.id.spinner_subject_stat_fragment);
+    spinner_violations_stat_fragment = v.findViewById(R.id.spinner_violations_stat_fragment);
 
     RecyclerView recyclerView = v.findViewById(R.id.recycler_view_);
 
@@ -91,6 +93,9 @@ public class StatFragment extends Fragment {
     violationList = new ArrayList<>();
 
     recyclerView.setAdapter(adapter);
+
+    selectedSubject = "none";
+
 
     CalendarView calendarView = v.findViewById(R.id.calendarView);
     calendarView.setVisibility(View.GONE);
@@ -147,54 +152,53 @@ public class StatFragment extends Fragment {
     });
 
 
-    spinner_subject_stat_fragment = v.findViewById(R.id.spinner_subject_stat_fragment);
     subjectsRef.addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
             subjectList.clear();
             for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
                 String value = childSnapshot.getValue(String.class);
                 subjectList.add(value);
             }
-            ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
-            spinner_subject_stat_fragment.setAdapter(subjectAdapter);
-        }
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
+            adapter.notifyDataSetChanged();
+
 
         }
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {   }
     });
+
     spinner_subject_stat_fragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            String selectedSubject = spinner_subject_stat_fragment.getSelectedItem().toString();
-            DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                    .getReference("SubjectSelected");
-            DatabaseReference subjectsReference = root.child(selectedSubject);
+            selectedSubject = spinner_subject_stat_fragment.getSelectedItem().toString();
 
-            subjectsReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    list.clear();
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        Model model = dataSnapshot.getValue(Model.class);
-                        list.add(model);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
         }
         @Override
-        public void onNothingSelected(AdapterView<?> adapterView) {
+        public void onNothingSelected(AdapterView<?> adapterView) {   }
+    });
+    DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("SubjectSelected");
+    DatabaseReference subjectsReference = root.child(selectedSubject);
+
+    ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
+    spinner_subject_stat_fragment.setAdapter(subjectAdapter);
+
+    subjectsReference.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            list.clear();
+            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                Model model = dataSnapshot.getValue(Model.class);
+                list.add(model);
+            }
+            adapter.notifyDataSetChanged();
         }
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {   }
     });
 
 
-    spinner_violations_stat_fragment = v.findViewById(R.id.spinner_violations_stat_fragment);
+
     violationsRef.addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -204,14 +208,13 @@ public class StatFragment extends Fragment {
                 String value = childSnapshot.getValue(String.class);
                 violationList.add(value);
             }
-            ArrayAdapter<String> violationAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, violationList);
-            spinner_violations_stat_fragment.setAdapter(violationAdapter);
         }
         @Override
         public void onCancelled(@NonNull DatabaseError error) {
 
         }
     });
+
     spinner_violations_stat_fragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

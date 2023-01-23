@@ -47,19 +47,19 @@ public class ScanFragment extends Fragment {
     EditText edit_text_subject_add, edit_text_violations_add;
     MaterialButton btn_add_subjects, btn_add_violation, btn_subjects;
     Spinner spinner_subjects, spinner_violations;
-    TextView text_view_subject_selected;
-    private TextViewUpdater textViewUpdater;
-
+    TextView text_view_subject_selected,text_view_violation_selected;
 
     ArrayList<String> list2;
+    ArrayList <String> subjectList = new ArrayList<>();
+    ArrayList <String> violationList = new ArrayList<>();
 
 
     //Initialize FirebaseDatabase
     private final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private final DatabaseReference root = studentDatabase.getReference();
+
     DatabaseReference subjectsRef = studentDatabase.getReference("Subjects");
     DatabaseReference violationsRef = studentDatabase.getReference("Violations");
-
 
 
     @Override
@@ -77,25 +77,66 @@ public class ScanFragment extends Fragment {
 
         list2 = new ArrayList<>();
 
-
-        textViewUpdater = new TextViewUpdater();
         text_view_subject_selected = v.findViewById(R.id.text_view_subject_selected);
+        text_view_violation_selected = v.findViewById(R.id.text_view_violation_selected);
+
+        spinner_subjects = v.findViewById(R.id.spinner_subjects);
+        spinner_violations = v.findViewById(R.id.spinner_violations);
+
+        subjectsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                updateSubjectSpinner(dataSnapshot);
+
+                ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
+                spinner_subjects.setAdapter(subjectAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {   }});
+
+        spinner_subjects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedSubject = spinner_subjects.getSelectedItem().toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }});
+
+        violationsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                updateViolationSpinner(dataSnapshot);
+
+                ArrayAdapter<String> violationAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, violationList);
+                spinner_violations.setAdapter(violationAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {   }
+        });
+
+        spinner_violations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedViolations = spinner_violations.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
 
         btn_subjects = v.findViewById(R.id.btn_subjects);
         btn_subjects.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 replaceFragment(new SubjectFragment());
+                btn_scan.setVisibility(View.GONE);
+                btn_subjects.setVisibility(View.GONE);
+                spinner_subjects.setVisibility(View.GONE);
+                spinner_violations.setVisibility(View.GONE);
             }
         });
-
-        text_view_subject_selected = v.findViewById(R.id.text_view_subject_selected);
-
-
-
-
-
-
 
 
         // Register the launcher and result handler
@@ -109,11 +150,11 @@ public class ScanFragment extends Fragment {
                     builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
                         String scanResult = result.getContents();
 
-                        DatabaseReference scanRes = root.child("Logs").child(date);
-                        DatabaseReference dateNodeRef = scanRes.child(scanResult);
 
-                        DatabaseReference searchRootRef = root.child("Scans").child(scanResult);
-                        DatabaseReference searchRef = searchRootRef.child(date);
+                        DatabaseReference dateNodeRef = root.child("Logs").child(date).child(scanResult);
+
+                        DatabaseReference searchRef = root.child("Scans").child(scanResult).child(date);
+
 
                         DatabaseReference userRes = root.child("Users").child(scanResult);
                         DatabaseReference suggestionRef = root.child("Suggestions");
@@ -136,34 +177,31 @@ public class ScanFragment extends Fragment {
 
 
                                 }else{
+
+                                    subjectViolationRef.child("Name").setValue(scanResult);
+                                    subjectViolationRef.child("Date").setValue(date);
+                                    subjectViolationRef.child("Subject").setValue(selectedSubject);
                                     subjectViolationRef.child("Violations").setValue(selectedViolations);
                                     subjectViolationRef.child("Check_In").setValue(time);
-                                    subjectViolationRef.child("Date").setValue(date);
-                                    subjectViolationRef.child("Name").setValue(scanResult);
-                                    subjectViolationRef.child("Subject").setValue(selectedSubject);
 
-
+                                    subjectSelectedRef.child("Name").setValue(scanResult);
+                                    subjectSelectedRef.child("Date").setValue(date);
                                     subjectSelectedRef.child("Subject").setValue(selectedSubject);
                                     subjectSelectedRef.child("Violation").setValue(selectedViolations);
                                     subjectSelectedRef.child("Check_In").setValue(time);
-                                    subjectSelectedRef.child("Date").setValue(date);
-                                    subjectSelectedRef.child("Name").setValue(scanResult);
 
+                                    dateNodeRef.child("Name").setValue(scanResult);
+                                    dateNodeRef.child("Date").setValue(date);
                                     dateNodeRef.child("Subject").setValue(selectedSubject);
                                     dateNodeRef.child("Violation").setValue(selectedViolations);
-                                    dateNodeRef.child("Date").setValue(date);
-                                    dateNodeRef.child("Name").setValue(scanResult);
                                     dateNodeRef.child("Check_In").setValue(time).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check In Successfully", Toast.LENGTH_SHORT).show());
 
-                                    searchRef.child("Date").setValue(date);
                                     searchRef.child("Name").setValue(scanResult);
-                                    searchRef.child("Check_In").setValue(time);
+                                    searchRef.child("Date").setValue(date);
                                     searchRef.child("Subject").setValue(selectedSubject);
                                     searchRef.child("Violation").setValue(selectedViolations);
-
-
+                                    searchRef.child("Check_In").setValue(time);
                                 }
-
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
@@ -182,23 +220,15 @@ public class ScanFragment extends Fragment {
                                     suggestionRef.push().setValue(scanResult);
                                 }
                             }
-
                                 @Override
-                                public void onCancelled (@NonNull DatabaseError error){
-
-                                }
-
+                                public void onCancelled (@NonNull DatabaseError error){   }
                         });
-
-
                     });
-                    //to show it duh
                     builder.show();
                 });
         btn_scan = v.findViewById(R.id.btn_scan);
         btn_scan.setOnClickListener(view -> {
             Toast.makeText(getActivity(), "CAMERA ON", Toast.LENGTH_SHORT).show();
-
             barcodeLauncher.launch(new ScanOptions());
             ScanOptions options = new ScanOptions();
             options.setPrompt("For Flash use Volume up Key");
@@ -208,20 +238,30 @@ public class ScanFragment extends Fragment {
         });
         return v;
     }
+
+
+
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
-    public void textViewManager(String string){
-        TextView textView = getView().findViewById(R.id.text_view_subject_selected);
-        textView.setText(string);
+
+    public void updateSubjectSpinner(DataSnapshot dataSnapshot) {
+        subjectList.clear();
+        for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+            String value = childSnapshot.getValue(String.class);
+            subjectList.add(value);
+        }
     }
-
-
-
-
+    public void updateViolationSpinner(DataSnapshot dataSnapshot) {
+        violationList.clear();
+        for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+            String value = childSnapshot.getValue(String.class);
+            violationList.add(value);
+        }
+    }
 
 }
 

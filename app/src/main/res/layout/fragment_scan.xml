@@ -15,51 +15,102 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="150dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+
+
+            <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/text_view_subject_selected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Subject Selected" />
+
+                <Spinner
+                    android:id="@+id/spinner_subjects"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+
+                <TextView
+                    android:id="@+id/text_view_violation_selected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Violation Selected" />
+
+                <Spinner
+                android:id="@+id/spinner_violations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            </LinearLayout>
+        </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_subjects"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="15dp"
+                android:text="Edit"
+                android:textColor="@color/white"
+                app:icon="@drawable/ic_baseline_add_24"
+                app:iconTint="@color/white"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/white"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                />
+
+            <Button
+            android:id="@+id/btn_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@color/grey3"
+            android:text="@string/string_btn_scan"
+            android:textColor="@color/white" />
+            </LinearLayout>
+        </LinearLayout>
+
     </FrameLayout>
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_gravity="bottom"
-    android:gravity="center"
-    android:layout_marginBottom="150dp"
-
-    >
-    <TextView
-        android:id="@+id/text_view_subject_selected"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="Jibril"
-        android:textColor="@color/white"
-        />
-
-    <Button
-        android:id="@+id/btn_scan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:backgroundTint="@color/grey2"
-        android:text="@string/string_btn_scan"
-        android:textColor="@color/white"
-        />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_subjects"
-        android:layout_width="135dp"
-        android:layout_height="55dp"
-        app:icon="@drawable/ic_baseline_add_24"
-        android:text="Subject"
-        android:textColor="@color/white"
-        app:iconTint="@color/white"
-        android:backgroundTint="@color/grey2"
-        />
-
-
-
-</LinearLayout>
-
 
 
 </FrameLayout>
