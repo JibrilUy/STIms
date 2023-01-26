@@ -114,8 +114,10 @@ public class SubjectFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 updateSubjectSpinner(dataSnapshot);
 
-                ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
-                spinner_subjects.setAdapter(subjectAdapter);
+                if(isAdded()) {
+                    ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
+                    spinner_subjects.setAdapter(subjectAdapter);
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {   }});
@@ -134,8 +136,11 @@ public class SubjectFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 updateViolationSpinner(dataSnapshot);
 
+                if(isAdded()) {
                 ArrayAdapter<String> violationAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, violationList);
                 spinner_violations.setAdapter(violationAdapter);
+                }
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {   }

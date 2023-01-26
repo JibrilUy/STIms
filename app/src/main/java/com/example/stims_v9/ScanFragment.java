@@ -49,7 +49,7 @@ public class ScanFragment extends Fragment {
     Spinner spinner_subjects, spinner_violations;
     TextView text_view_subject_selected,text_view_violation_selected;
 
-    ArrayList<String> list2;
+    ArrayList<String> list2 = new ArrayList<>();
     ArrayList <String> subjectList = new ArrayList<>();
     ArrayList <String> violationList = new ArrayList<>();
 
@@ -75,7 +75,6 @@ public class ScanFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_scan, container, false);
 
-        list2 = new ArrayList<>();
 
         text_view_subject_selected = v.findViewById(R.id.text_view_subject_selected);
         text_view_violation_selected = v.findViewById(R.id.text_view_violation_selected);
@@ -83,13 +82,18 @@ public class ScanFragment extends Fragment {
         spinner_subjects = v.findViewById(R.id.spinner_subjects);
         spinner_violations = v.findViewById(R.id.spinner_violations);
 
+        btn_subjects = v.findViewById(R.id.btn_subjects);
+        btn_scan = v.findViewById(R.id.btn_scan);
+
         subjectsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 updateSubjectSpinner(dataSnapshot);
 
-                ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
-                spinner_subjects.setAdapter(subjectAdapter);
+                if(isAdded()) {
+                    ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
+                    spinner_subjects.setAdapter(subjectAdapter);
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {   }});
@@ -107,8 +111,10 @@ public class ScanFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 updateViolationSpinner(dataSnapshot);
 
-                ArrayAdapter<String> violationAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, violationList);
-                spinner_violations.setAdapter(violationAdapter);
+                if(isAdded()) {
+                    ArrayAdapter<String> violationAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, violationList);
+                    spinner_violations.setAdapter(violationAdapter);
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {   }
@@ -125,88 +131,38 @@ public class ScanFragment extends Fragment {
             }
         });
 
-
-        btn_subjects = v.findViewById(R.id.btn_subjects);
-        btn_subjects.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                replaceFragment(new SubjectFragment());
-                btn_scan.setVisibility(View.GONE);
-                btn_subjects.setVisibility(View.GONE);
-                spinner_subjects.setVisibility(View.GONE);
-                spinner_violations.setVisibility(View.GONE);
-            }
-        });
-
-
-        // Register the launcher and result handler
         final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
                 result -> {
                     result.getClass();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                    builder.setTitle("Result");
-                    builder.setMessage(result.getContents());
+                    String scanResult = result.getContents();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(scanResult);
+                    builder.setMessage("Selected Subject: "+ selectedSubject + "\nSelected Violation: " + selectedViolations);
                     builder.setPositiveButton("CANCEL", (dialogInterface, i) -> dialogInterface.dismiss());
                     builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
-                        String scanResult = result.getContents();
 
+                            DatabaseReference logsRef = root.child("Logs").child(date).child(scanResult).child(selectedSubject);
+                            DatabaseReference scansRef = root.child("Scans").child(scanResult).child(selectedSubject).child(date);
 
-                        DatabaseReference dateNodeRef = root.child("Logs").child(date).child(scanResult);
+                            DatabaseReference suggestionRef = root.child("Suggestions");
+                            DatabaseReference userRes = root.child("Users").child(scanResult);
 
-                        DatabaseReference searchRef = root.child("Scans").child(scanResult).child(date);
-
-
-                        DatabaseReference userRes = root.child("Users").child(scanResult);
-                        DatabaseReference suggestionRef = root.child("Suggestions");
-
-                        DatabaseReference subjectSelected = root.child("SubjectSelected").child(selectedSubject);
-                        DatabaseReference subjectSelectedRef = subjectSelected.child(scanResult);
-
-                        DatabaseReference violationSelected = root.child("ViolationSelected").child(selectedViolations);
-                        DatabaseReference subjectViolationRef = violationSelected.child(scanResult);
-
-
-                        dateNodeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.child("Check_In").exists()){
-                                    dateNodeRef.child("Check_Out").setValue(time).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check Out Successfully", Toast.LENGTH_SHORT).show());
-                                    searchRef.child("Check_Out").setValue(time);
-                                    subjectSelectedRef.child("Check_Out").setValue(time);
-                                    subjectViolationRef.child("Check_Out").setValue(time);
-
-
-                                }else{
-
-                                    subjectViolationRef.child("Name").setValue(scanResult);
-                                    subjectViolationRef.child("Date").setValue(date);
-                                    subjectViolationRef.child("Subject").setValue(selectedSubject);
-                                    subjectViolationRef.child("Violations").setValue(selectedViolations);
-                                    subjectViolationRef.child("Check_In").setValue(time);
-
-                                    subjectSelectedRef.child("Name").setValue(scanResult);
-                                    subjectSelectedRef.child("Date").setValue(date);
-                                    subjectSelectedRef.child("Subject").setValue(selectedSubject);
-                                    subjectSelectedRef.child("Violation").setValue(selectedViolations);
-                                    subjectSelectedRef.child("Check_In").setValue(time);
-
-                                    dateNodeRef.child("Name").setValue(scanResult);
-                                    dateNodeRef.child("Date").setValue(date);
-                                    dateNodeRef.child("Subject").setValue(selectedSubject);
-                                    dateNodeRef.child("Violation").setValue(selectedViolations);
-                                    dateNodeRef.child("Check_In").setValue(time).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check In Successfully", Toast.LENGTH_SHORT).show());
-
-                                    searchRef.child("Name").setValue(scanResult);
-                                    searchRef.child("Date").setValue(date);
-                                    searchRef.child("Subject").setValue(selectedSubject);
-                                    searchRef.child("Violation").setValue(selectedViolations);
-                                    searchRef.child("Check_In").setValue(time);
+                            logsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.child("Check_In").exists()) {
+                                        checkOutData(scansRef, time);
+                                        checkOutData(logsRef, time);
+                                    } else {
+                                        checkInData(logsRef, scanResult, date, time, selectedSubject, selectedViolations);
+                                        checkInData(scansRef, scanResult, date, time, selectedSubject, selectedViolations);
+                                    }
                                 }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                            }
-                        });
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
 
                         userRes.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -223,22 +179,27 @@ public class ScanFragment extends Fragment {
                                 @Override
                                 public void onCancelled (@NonNull DatabaseError error){   }
                         });
-                    });
-                    builder.show();
                 });
-        btn_scan = v.findViewById(R.id.btn_scan);
+        builder.show();
+
+    });
+
         btn_scan.setOnClickListener(view -> {
-            Toast.makeText(getActivity(), "CAMERA ON", Toast.LENGTH_SHORT).show();
             barcodeLauncher.launch(new ScanOptions());
-            ScanOptions options = new ScanOptions();
-            options.setPrompt("For Flash use Volume up Key");
-            options.setBeepEnabled(true);
-            options.setOrientationLocked(true);
-            options.setCaptureActivity(Capture.class);
+            startScan();
         });
+
+        btn_subjects.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new SubjectFragment());
+                hideButtons(btn_scan, btn_subjects, spinner_subjects, spinner_violations, text_view_subject_selected,text_view_violation_selected);
+            }
+        });
+
+
         return v;
     }
-
 
 
     private void replaceFragment(Fragment fragment) {
@@ -246,6 +207,15 @@ public class ScanFragment extends Fragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
+    }
+
+    public void hideButtons(View btnScan, View btnSubjects, View spinnerSubjects, View spinnerViolations, View text_view_subject_selected,View text_view_violation_selected) {
+        btnScan.setVisibility(View.GONE);
+        btnSubjects.setVisibility(View.GONE);
+        spinnerSubjects.setVisibility(View.GONE);
+        spinnerViolations.setVisibility(View.GONE);
+        text_view_subject_selected.setVisibility(View.GONE);
+        text_view_violation_selected.setVisibility(View.GONE);
     }
 
     public void updateSubjectSpinner(DataSnapshot dataSnapshot) {
@@ -263,6 +233,26 @@ public class ScanFragment extends Fragment {
         }
     }
 
+    public void checkInData(DatabaseReference databaseReferenceRef, String name, String date, String check_in, String subject, String violation){
+        databaseReferenceRef.child("Name").setValue(name).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check In Successfully", Toast.LENGTH_SHORT).show());
+        databaseReferenceRef.child("Date").setValue(date);
+        databaseReferenceRef.child("Check_In").setValue(check_in);
+        databaseReferenceRef.child("Subject").setValue(subject);
+        databaseReferenceRef.child("Violation").setValue(violation);
+
+    }
+
+    public void checkOutData(DatabaseReference databaseReferenceRef, String time){
+        databaseReferenceRef.child("Check_Out").setValue(time).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check Out Successfully", Toast.LENGTH_SHORT).show());
+    }
+
+    public void startScan(){
+        Toast.makeText(getActivity(), "For Flash use Volume up Key", Toast.LENGTH_SHORT).show();
+        ScanOptions options = new ScanOptions();
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(Capture.class);
+    }
 }
 
 
