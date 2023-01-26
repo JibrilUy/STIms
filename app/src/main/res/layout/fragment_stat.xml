@@ -31,8 +31,20 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:gravity="end">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Violation: " />
 
     <Spinner
     android:id="@+id/spinner_violations_stat_fragment"
@@ -42,6 +54,18 @@
     android:layout_marginEnd="15dp"
 
     />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="end">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subject: " />
     <Spinner
         android:id="@+id/spinner_subject_stat_fragment"
         android:layout_width="wrap_content"
@@ -50,6 +74,7 @@
         android:layout_marginEnd="15dp"
 
         />
+    </LinearLayout>
 
 </LinearLayout>
 

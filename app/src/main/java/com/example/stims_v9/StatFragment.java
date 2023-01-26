@@ -94,9 +94,6 @@ public class StatFragment extends Fragment {
 
     recyclerView.setAdapter(adapter);
 
-    selectedSubject = "none";
-
-
     CalendarView calendarView = v.findViewById(R.id.calendarView);
     calendarView.setVisibility(View.GONE);
     btn_calendar_view = v.findViewById(R.id.btn_calendar_view);
@@ -132,7 +129,7 @@ public class StatFragment extends Fragment {
             String dateRef = sdf.format(new Date(date));
 
             DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Logs");
-            DatabaseReference datePickerRef = root.child(dateRef);
+            DatabaseReference datePickerRef = root.child(dateRef).child(selectedSubject);
 
             datePickerRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -162,7 +159,10 @@ public class StatFragment extends Fragment {
             }
             adapter.notifyDataSetChanged();
 
-
+            if(isAdded()) {
+                ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
+                spinner_subject_stat_fragment.setAdapter(subjectAdapter);
+            }
         }
         @Override
         public void onCancelled(@NonNull DatabaseError error) {   }
@@ -175,45 +175,25 @@ public class StatFragment extends Fragment {
 
         }
         @Override
-        public void onNothingSelected(AdapterView<?> adapterView) {   }
-    });
-    DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("SubjectSelected");
-    DatabaseReference subjectsReference = root.child(selectedSubject);
-
-    ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
-    spinner_subject_stat_fragment.setAdapter(subjectAdapter);
-
-    subjectsReference.addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot) {
-            list.clear();
-            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                Model model = dataSnapshot.getValue(Model.class);
-                list.add(model);
-            }
-            adapter.notifyDataSetChanged();
-        }
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {   }
-    });
-
+        public void onNothingSelected(AdapterView<?> adapterView) {   } });
 
 
     violationsRef.addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
             violationList.clear();
             for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
                 String value = childSnapshot.getValue(String.class);
                 violationList.add(value);
             }
-        }
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
+            if(isAdded()) {
+                ArrayAdapter<String> violationAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, violationList);
+                spinner_violations_stat_fragment.setAdapter(violationAdapter);
+            }
 
         }
-    });
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {  }  });
 
     spinner_violations_stat_fragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
         @Override
@@ -309,8 +289,7 @@ public class StatFragment extends Fragment {
 
             DatabaseReference searchRootRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
                     .getReference("Scans");
-            DatabaseReference searchRef = searchRootRef.child(s);
-
+            DatabaseReference searchRef = searchRootRef.child(s).child(selectedSubject);
             searchRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

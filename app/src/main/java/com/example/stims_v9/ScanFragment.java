@@ -138,10 +138,13 @@ public class ScanFragment extends Fragment {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(scanResult);
                     builder.setMessage("Selected Subject: "+ selectedSubject + "\nSelected Violation: " + selectedViolations);
-                    builder.setPositiveButton("CANCEL", (dialogInterface, i) -> dialogInterface.dismiss());
+                    builder.setPositiveButton("CANCEL", (dialogInterface, i) -> {
+                        Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
+                        dialogInterface.dismiss();
+                    });
                     builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
 
-                            DatabaseReference logsRef = root.child("Logs").child(date).child(scanResult).child(selectedSubject);
+                            DatabaseReference logsRef = root.child("Logs").child(date).child(selectedSubject).child(scanResult);
                             DatabaseReference scansRef = root.child("Scans").child(scanResult).child(selectedSubject).child(date);
 
                             DatabaseReference suggestionRef = root.child("Suggestions");
@@ -181,7 +184,6 @@ public class ScanFragment extends Fragment {
                         });
                 });
         builder.show();
-
     });
 
         btn_scan.setOnClickListener(view -> {
@@ -196,7 +198,6 @@ public class ScanFragment extends Fragment {
                 hideButtons(btn_scan, btn_subjects, spinner_subjects, spinner_violations, text_view_subject_selected,text_view_violation_selected);
             }
         });
-
 
         return v;
     }
