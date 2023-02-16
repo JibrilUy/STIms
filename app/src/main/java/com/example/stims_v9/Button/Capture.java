@@ -1,4 +1,4 @@
-package com.example.stims_v9;
+package com.example.stims_v9.Button;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;

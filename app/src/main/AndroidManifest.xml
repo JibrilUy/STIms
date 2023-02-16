@@ -22,25 +22,24 @@
         android:theme="@style/Theme.MaterialComponents.NoActionBar"
         tools:targetApi="31">
         <activity
-            android:name=".StudentList"
+            android:name=".Button.StudentList"
             android:exported="false" />
         <activity
-        android:name=".Capture"
-        android:screenOrientation="portrait"
-        android:stateNotNeeded="true"
-        android:theme="@style/zxing_CaptureTheme"
-        android:windowSoftInputMode="stateAlwaysHidden" />
+            android:name=".Button.Capture"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
-            tools:replace="android:screenOrientation"
-            android:stateNotNeeded="true"/>
+            android:stateNotNeeded="true"
+            tools:replace="android:screenOrientation" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:replace="screenOrientation">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="com.google.zxing.client.android.SCAN" />
@@ -48,7 +47,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

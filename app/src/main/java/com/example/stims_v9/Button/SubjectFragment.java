@@ -1,6 +1,4 @@
-package com.example.stims_v9;
-
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+package com.example.stims_v9.Button;
 
 import android.os.Bundle;
 
@@ -9,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +14,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.stims_v9.R;
+import com.example.stims_v9.ScanFragment;
+import com.example.stims_v9.Adapters.TextViewUpdater;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

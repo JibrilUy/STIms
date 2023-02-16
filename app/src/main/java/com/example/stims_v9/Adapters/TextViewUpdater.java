@@ -1,4 +1,4 @@
-package com.example.stims_v9;
+package com.example.stims_v9.Adapters;
 
 import android.widget.TextView;
 

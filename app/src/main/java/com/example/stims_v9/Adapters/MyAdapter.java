@@ -1,4 +1,4 @@
-package com.example.stims_v9;
+package com.example.stims_v9.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.stims_v9.Model.Model;
+import com.example.stims_v9.R;
 
 import java.util.ArrayList;
 

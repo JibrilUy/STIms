@@ -7,7 +7,6 @@ import android.database.MatrixCursor;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.cursoradapter.widget.CursorAdapter;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,34 +18,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.FilterQueryProvider;
 import android.widget.Spinner;
 
 import androidx.appcompat.widget.SearchView;
 
 
+import com.example.stims_v9.Adapters.MyAdapter;
+import com.example.stims_v9.Button.StudentList;
+import com.example.stims_v9.Model.Model;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class StatFragment extends Fragment {
 
@@ -118,35 +109,7 @@ public class StatFragment extends Fragment {
         }
     });
 
-    calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-        @Override
-        public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(year, month, dayOfMonth);
-            long date = calendar.getTimeInMillis();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMMM, d,EEEE");
-            String dateRef = sdf.format(new Date(date));
-
-            DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Logs");
-            DatabaseReference datePickerRef = root.child(dateRef).child(selectedSubject);
-
-            datePickerRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    list.clear();
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        Model model = dataSnapshot.getValue(Model.class);
-                        list.add(model);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
-        }
-    });
 
 
     subjectsRef.addValueEventListener(new ValueEventListener() {
@@ -198,10 +161,11 @@ public class StatFragment extends Fragment {
     spinner_violations_stat_fragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            String selectedViolations = spinner_violations_stat_fragment.getSelectedItem().toString();
+            selectedViolation = spinner_violations_stat_fragment.getSelectedItem().toString();
+
             DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
                     .getReference("ViolationSelected");
-            DatabaseReference violationReference = root.child(selectedViolations);
+            DatabaseReference violationReference = root.child(selectedViolation);
 
             violationReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -225,7 +189,35 @@ public class StatFragment extends Fragment {
     });
 
 
+    calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        @Override
+        public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
 
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, dayOfMonth);
+            long date = calendar.getTimeInMillis();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMMM, d,EEEE");
+            String dateRef = sdf.format(new Date(date));
+
+            DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Logs");
+            DatabaseReference datePickerRef = root.child(dateRef).child(selectedViolation).child(selectedSubject);
+
+            datePickerRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    list.clear();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        Model model = dataSnapshot.getValue(Model.class);
+                        list.add(model);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
+    });
     search_view = v.findViewById(R.id.search_view);
 
     search_view.setOnClickListener(new View.OnClickListener() {
@@ -289,7 +281,7 @@ public class StatFragment extends Fragment {
 
             DatabaseReference searchRootRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
                     .getReference("Scans");
-            DatabaseReference searchRef = searchRootRef.child(s).child(selectedSubject);
+            DatabaseReference searchRef = searchRootRef.child(s).child(selectedViolation).child(selectedSubject);
             searchRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -20,6 +20,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.stims_v9.Button.Capture;
+import com.example.stims_v9.Button.SubjectFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +34,6 @@ import com.journeyapps.barcodescanner.ScanOptions;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class ScanFragment extends Fragment {
@@ -144,8 +145,8 @@ public class ScanFragment extends Fragment {
                     });
                     builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
 
-                            DatabaseReference logsRef = root.child("Logs").child(date).child(selectedSubject).child(scanResult);
-                            DatabaseReference scansRef = root.child("Scans").child(scanResult).child(selectedSubject).child(date);
+                            DatabaseReference logsRef = root.child("Logs").child(date).child(selectedViolations).child(selectedSubject).child(scanResult);
+                            DatabaseReference scansRef = root.child("Scans").child(scanResult).child(selectedViolations).child(selectedSubject).child(date);
 
                             DatabaseReference suggestionRef = root.child("Suggestions");
                             DatabaseReference userRes = root.child("Users").child(scanResult);

@@ -1,4 +1,4 @@
-package com.example.stims_v9;
+package com.example.stims_v9.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
+import com.example.stims_v9.Adapters.MyAdapter2;
+import com.example.stims_v9.Model.Model2;
+import com.example.stims_v9.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

@@ -1,4 +1,4 @@
-package com.example.stims_v9;
+package com.example.stims_v9.Model;
 
 public class Model2 {
     String student_name;
