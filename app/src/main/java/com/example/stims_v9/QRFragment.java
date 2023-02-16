@@ -54,7 +54,7 @@ public class QRFragment extends Fragment {
         View v =  inflater.inflate(R.layout.fragment_q_r, container, false);
 
 
-            etQR = (EditText) v.findViewById(R.id.etQR);
+        etQR = (EditText) v.findViewById(R.id.etQR);
             imgQR = (ImageView) v.findViewById(R.id.imgQR);
             btnGenerateQR = (Button) v.findViewById(R.id.btnGenerateQR);
             btnSignOut = v.findViewById(R.id.btnSignOut);
@@ -120,11 +120,8 @@ public class QRFragment extends Fragment {
             Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
 
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.Q){
-
-
             fos = resolver.openOutputStream(Objects.requireNonNull(imageUri));
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-//            Objects.requirementNonNull(fos,"must have scanned");
         }}catch (Exception e){
             Log.d("error", e.toString());
         }

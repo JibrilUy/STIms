@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/stims_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MaterialComponents.NoActionBar"
+        android:theme="@style/AppBarTheme"
         tools:targetApi="31">
         <activity
             android:name=".Button.StudentList"
@@ -38,11 +38,15 @@
         <activity android:name=".Login.SignIn"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            tools:replace="android:screenOrientation"/>
+            tools:replace="android:screenOrientation"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar"
+            />
         <activity android:name=".Login.Register"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            tools:replace="android:screenOrientation"/>
+            tools:replace="android:screenOrientation"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar"
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true"

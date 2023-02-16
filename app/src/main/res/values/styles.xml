@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppBarTheme" parent="Theme.MaterialComponents">
         <!-- Customize your theme here -->
-        <item name="colorPrimary">@color/grey</item>
-        <item name="colorPrimaryDark">@color/grey2</item>
-        <item name="colorAccent">@color/white</item>
+        <item name="colorPrimary">@color/sti_blue</item>
+        <item name="colorPrimaryDark">@color/sti_blue</item>
+        <item name="colorAccent">@color/sti_blue</item>
+        
+        <item name="actionBarStyle">@style/MyActionBarStyle</item>
 
     </style>
 </resources>
