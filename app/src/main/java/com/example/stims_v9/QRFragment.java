@@ -2,6 +2,7 @@ package com.example.stims_v9;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -40,9 +42,11 @@ public class QRFragment extends Fragment {
     }
 
     EditText etQR;
-    Button btnGenerateQR;
+    Button btnGenerateQR, btnSignOut;
     ImageView imgQR;
     String bitmap_name;
+
+    FirebaseAuth mAuth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +57,17 @@ public class QRFragment extends Fragment {
             etQR = (EditText) v.findViewById(R.id.etQR);
             imgQR = (ImageView) v.findViewById(R.id.imgQR);
             btnGenerateQR = (Button) v.findViewById(R.id.btnGenerateQR);
+            btnSignOut = v.findViewById(R.id.btnSignOut);
+            mAuth = FirebaseAuth.getInstance();
+
+            btnSignOut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent (getActivity(), com.example.stims_v9.Login.SignIn.class);
+                    startActivity(intent);
+                }
+            });
 
 
             String inputText = etQR.getText().toString();

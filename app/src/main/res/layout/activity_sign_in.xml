@@ -1,9 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login.SignIn">
+    tools:context=".Login.SignIn"
+    android:orientation="vertical"
+    android:backgroundTint="@color/grey">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140dp"
+        android:gravity="center"
+        android:text="Login"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        />
+
+    <EditText
+        android:id="@+id/editTextLoginEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        android:hint="EMAIL"
+        android:maxLength="50"
+        android:minHeight="48dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
+
+    <EditText
+        android:id="@+id/editTextLoginPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="40dp"
+        android:hint="PASSWORD"
+        android:inputType="textPassword"
+        android:maxLength="50"
+        android:minHeight="48dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
+
+    <ProgressBar
+        android:id="@+id/progressBarLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
+
+
+    <Button
+        android:id="@+id/btnSignIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:text="SIGN IN"
+        android:textColorHint="@color/white"
+        android:backgroundTint="@color/grey2"
+        />
+
+    <TextView
+        android:id="@+id/textViewRedirectToRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="No Account? Register here"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        />
+
+</LinearLayout>

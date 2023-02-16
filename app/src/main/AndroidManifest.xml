@@ -35,6 +35,14 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             tools:replace="android:screenOrientation" />
+        <activity android:name=".Login.SignIn"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            tools:replace="android:screenOrientation"/>
+        <activity android:name=".Login.Register"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            tools:replace="android:screenOrientation"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
