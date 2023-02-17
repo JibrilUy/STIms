@@ -22,6 +22,10 @@
         android:theme="@style/AppBarTheme"
         tools:targetApi="31">
         <activity
+            android:name=".Button.ProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
+        <activity
             android:name=".Button.StudentList"
             android:exported="false" />
         <activity
@@ -35,18 +39,18 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             tools:replace="android:screenOrientation" />
-        <activity android:name=".Login.SignIn"
+        <activity
+            android:name=".Login.SignIn"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            tools:replace="android:screenOrientation"
             android:theme="@style/Theme.MaterialComponents.NoActionBar"
-            />
-        <activity android:name=".Login.Register"
+            tools:replace="android:screenOrientation" />
+        <activity
+            android:name=".Login.Register"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            tools:replace="android:screenOrientation"
             android:theme="@style/Theme.MaterialComponents.NoActionBar"
-            />
+            tools:replace="android:screenOrientation" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

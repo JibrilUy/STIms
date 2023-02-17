@@ -60,14 +60,7 @@ public class QRFragment extends Fragment {
             btnSignOut = v.findViewById(R.id.btnSignOut);
             mAuth = FirebaseAuth.getInstance();
 
-            btnSignOut.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FirebaseAuth.getInstance().signOut();
-                    Intent intent = new Intent (getActivity(), com.example.stims_v9.Login.SignIn.class);
-                    startActivity(intent);
-                }
-            });
+
 
 
             String inputText = etQR.getText().toString();
