@@ -52,14 +52,13 @@ public class StatFragment extends Fragment {
 
 
 
-    Spinner spinner_subject_stat_fragment, spinner_violations_stat_fragment;
+    Spinner spinner_subject_stat_fragment;
 
     private MyAdapter adapter;
     private ArrayList<Model> list;
     ArrayList<String> subjectList;
-    ArrayList<String> violationList;
 
-    String selectedSubject, selectedViolation;
+    String selectedSubject;
 
     MaterialButton btn_search_student, btn_calendar_view;
     SearchView search_view;
@@ -71,7 +70,6 @@ public class StatFragment extends Fragment {
     View v = inflater.inflate(R.layout.fragment_stat, container, false);
 
     spinner_subject_stat_fragment = v.findViewById(R.id.spinner_subject_stat_fragment);
-    spinner_violations_stat_fragment = v.findViewById(R.id.spinner_violations_stat_fragment);
 
     RecyclerView recyclerView = v.findViewById(R.id.recycler_view_);
 
@@ -81,7 +79,6 @@ public class StatFragment extends Fragment {
     list = new ArrayList<>();
     adapter = new MyAdapter(getActivity(), list);
     subjectList = new ArrayList<>();
-    violationList = new ArrayList<>();
 
     recyclerView.setAdapter(adapter);
 
@@ -135,58 +132,11 @@ public class StatFragment extends Fragment {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
             selectedSubject = spinner_subject_stat_fragment.getSelectedItem().toString();
-
         }
         @Override
         public void onNothingSelected(AdapterView<?> adapterView) {   } });
 
 
-    violationsRef.addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            violationList.clear();
-            for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                String value = childSnapshot.getValue(String.class);
-                violationList.add(value);
-            }
-            if(isAdded()) {
-                ArrayAdapter<String> violationAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, violationList);
-                spinner_violations_stat_fragment.setAdapter(violationAdapter);
-            }
-
-        }
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {  }  });
-
-    spinner_violations_stat_fragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            selectedViolation = spinner_violations_stat_fragment.getSelectedItem().toString();
-
-            DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                    .getReference("ViolationSelected");
-            DatabaseReference violationReference = root.child(selectedViolation);
-
-            violationReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    list.clear();
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        Model model = dataSnapshot.getValue(Model.class);
-                        list.add(model);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
-        }
-        @Override
-        public void onNothingSelected(AdapterView<?> adapterView) {
-
-        }
-    });
 
 
     calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -200,7 +150,7 @@ public class StatFragment extends Fragment {
             String dateRef = sdf.format(new Date(date));
 
             DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Logs");
-            DatabaseReference datePickerRef = root.child(dateRef).child(selectedViolation).child(selectedSubject);
+            DatabaseReference datePickerRef = root.child(dateRef).child(selectedSubject);
 
             datePickerRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -281,7 +231,7 @@ public class StatFragment extends Fragment {
 
             DatabaseReference searchRootRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
                     .getReference("Scans");
-            DatabaseReference searchRef = searchRootRef.child(s).child(selectedViolation).child(selectedSubject);
+            DatabaseReference searchRef = searchRootRef.child(s).child(selectedSubject);
             searchRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

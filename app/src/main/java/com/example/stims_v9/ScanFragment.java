@@ -43,16 +43,14 @@ public class ScanFragment extends Fragment {
     String currentTime = new SimpleDateFormat("h:mm:a", Locale.getDefault()).format(new Date());
     String time = currentTime;
     String date = currentDate;
-    String nameModel, selectedSubject, selectedViolations;
+    String nameModel, selectedSubject;
     Button btn_scan ;
-    EditText edit_text_subject_add, edit_text_violations_add;
-    MaterialButton btn_add_subjects, btn_add_violation, btn_subjects;
-    Spinner spinner_subjects, spinner_violations;
-    TextView text_view_subject_selected,text_view_violation_selected;
+    MaterialButton btn_add_subjects, btn_subjects;
+    Spinner spinner_subjects;
+    TextView text_view_subject_selected;
 
     ArrayList<String> list2 = new ArrayList<>();
     ArrayList <String> subjectList = new ArrayList<>();
-    ArrayList <String> violationList = new ArrayList<>();
 
 
     //Initialize FirebaseDatabase
@@ -60,7 +58,6 @@ public class ScanFragment extends Fragment {
     private final DatabaseReference root = studentDatabase.getReference();
 
     DatabaseReference subjectsRef = studentDatabase.getReference("Subjects");
-    DatabaseReference violationsRef = studentDatabase.getReference("Violations");
 
 
     @Override
@@ -78,10 +75,8 @@ public class ScanFragment extends Fragment {
 
 
         text_view_subject_selected = v.findViewById(R.id.text_view_subject_selected);
-        text_view_violation_selected = v.findViewById(R.id.text_view_violation_selected);
 
         spinner_subjects = v.findViewById(R.id.spinner_subjects);
-        spinner_violations = v.findViewById(R.id.spinner_violations);
 
         btn_subjects = v.findViewById(R.id.btn_subjects);
         btn_scan = v.findViewById(R.id.btn_scan);
@@ -107,30 +102,7 @@ public class ScanFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }});
 
-        violationsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                updateViolationSpinner(dataSnapshot);
 
-                if(isAdded()) {
-                    ArrayAdapter<String> violationAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, violationList);
-                    spinner_violations.setAdapter(violationAdapter);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {   }
-        });
-
-        spinner_violations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedViolations = spinner_violations.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
 
         final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
                 result -> {
@@ -138,15 +110,15 @@ public class ScanFragment extends Fragment {
                     String scanResult = result.getContents();
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(scanResult);
-                    builder.setMessage("Selected Subject: "+ selectedSubject + "\nSelected Violation: " + selectedViolations);
+                    builder.setMessage("Selected Subject: "+ selectedSubject );
                     builder.setPositiveButton("CANCEL", (dialogInterface, i) -> {
                         Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
                         dialogInterface.dismiss();
                     });
                     builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
 
-                            DatabaseReference logsRef = root.child("Logs").child(date).child(selectedViolations).child(selectedSubject).child(scanResult);
-                            DatabaseReference scansRef = root.child("Scans").child(scanResult).child(selectedViolations).child(selectedSubject).child(date);
+                            DatabaseReference logsRef = root.child("Logs").child(date).child(selectedSubject).child(scanResult);
+                            DatabaseReference scansRef = root.child("Scans").child(scanResult).child(selectedSubject).child(date);
 
                             DatabaseReference suggestionRef = root.child("Suggestions");
                             DatabaseReference userRes = root.child("Users").child(scanResult);
@@ -158,8 +130,8 @@ public class ScanFragment extends Fragment {
                                         checkOutData(scansRef, time);
                                         checkOutData(logsRef, time);
                                     } else {
-                                        checkInData(logsRef, scanResult, date, time, selectedSubject, selectedViolations);
-                                        checkInData(scansRef, scanResult, date, time, selectedSubject, selectedViolations);
+                                        checkInData(logsRef, scanResult, date, time, selectedSubject);
+                                        checkInData(scansRef, scanResult, date, time, selectedSubject);
                                     }
                                 }
 
@@ -196,7 +168,7 @@ public class ScanFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 replaceFragment(new SubjectFragment());
-                hideButtons(btn_scan, btn_subjects, spinner_subjects, spinner_violations, text_view_subject_selected,text_view_violation_selected);
+                hideButtons(btn_scan, btn_subjects, spinner_subjects, text_view_subject_selected);
             }
         });
 
@@ -211,13 +183,11 @@ public class ScanFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
-    public void hideButtons(View btnScan, View btnSubjects, View spinnerSubjects, View spinnerViolations, View text_view_subject_selected,View text_view_violation_selected) {
+    public void hideButtons(View btnScan, View btnSubjects, View spinnerSubjects, View text_view_subject_selected) {
         btnScan.setVisibility(View.GONE);
         btnSubjects.setVisibility(View.GONE);
         spinnerSubjects.setVisibility(View.GONE);
-        spinnerViolations.setVisibility(View.GONE);
         text_view_subject_selected.setVisibility(View.GONE);
-        text_view_violation_selected.setVisibility(View.GONE);
     }
 
     public void updateSubjectSpinner(DataSnapshot dataSnapshot) {
@@ -227,20 +197,11 @@ public class ScanFragment extends Fragment {
             subjectList.add(value);
         }
     }
-    public void updateViolationSpinner(DataSnapshot dataSnapshot) {
-        violationList.clear();
-        for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-            String value = childSnapshot.getValue(String.class);
-            violationList.add(value);
-        }
-    }
-
-    public void checkInData(DatabaseReference databaseReferenceRef, String name, String date, String check_in, String subject, String violation){
+    public void checkInData(DatabaseReference databaseReferenceRef, String name, String date, String check_in, String subject){
         databaseReferenceRef.child("Name").setValue(name).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check In Successfully", Toast.LENGTH_SHORT).show());
         databaseReferenceRef.child("Date").setValue(date);
         databaseReferenceRef.child("Check_In").setValue(check_in);
         databaseReferenceRef.child("Subject").setValue(subject);
-        databaseReferenceRef.child("Violation").setValue(violation);
 
     }
 

@@ -20,23 +20,27 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Register extends AppCompatActivity {
+
+    final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    DatabaseReference root = studentDatabase.getReference();
 
     EditText editTextRegisterEmail, editTextRegisterPassword;
     Button btnRegister;
     TextView textViewRedirectToLogin;
     ProgressBar progressBarRegister;
     FirebaseAuth mAuth;
+    String email, password;
 
     @Override
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            Intent intent = new Intent (getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
+            openMainActivity();
         }
     }
 
@@ -56,49 +60,64 @@ public class Register extends AppCompatActivity {
         textViewRedirectToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent (getApplicationContext(), SignIn.class);
-                startActivity(intent);
-                finish();
-
+                openSignInActivity();
             }
         });
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email, password;
                 email = editTextRegisterEmail.getText().toString();
                 password = editTextRegisterPassword.getText().toString();
 
                 progressBarRegister.setVisibility(View.VISIBLE);
                 if(TextUtils.isEmpty(email)){
-                    Toast.makeText(Register.this, "Enter Email", Toast.LENGTH_SHORT);
-                    return;
+                    showToastAndReturn("Enter Email");
                 }
                 if(TextUtils.isEmpty(password)){
-                    Toast.makeText(Register.this, "Create Password", Toast.LENGTH_SHORT);
-                    return;
+                    showToastAndReturn("Create Password");
                 }
 
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                String userId = mAuth.getCurrentUser().getUid();
+                DatabaseReference userDatabaseRef = root.child("UserData").child(userId);
+                userDatabaseRef.child("email").setValue(email);
+
+                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressBarRegister.setVisibility(View.GONE);
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(Register.this, "Account Created.",
-                                            Toast.LENGTH_SHORT).show();
-
-                                } else {
-                                    Toast.makeText(Register.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                }
+                                completedRegistration(task);
                             }
                         });
             }
         });
+    }
 
+    public void openSignInActivity(){
+        Intent intent = new Intent (getApplicationContext(), SignIn.class);
+        startActivity(intent);
+        finish();
+    }
 
+    public void openMainActivity(){
+        Intent intent = new Intent (getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
+    public void showToastAndReturn(String string){
+        Toast.makeText(Register.this, string, Toast.LENGTH_SHORT);
+        return;
+    }
+
+    public void completedRegistration(Task task){
+        progressBarRegister.setVisibility(View.GONE);
+        if (task.isSuccessful()) {
+            showToast("Account Created");
+        } else {
+            showToast("Email Already Used");
+        }
+    }
+    public void showToast(String string){
+        Toast.makeText(Register.this, string, Toast.LENGTH_SHORT);
     }
 }
