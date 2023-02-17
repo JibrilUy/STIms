@@ -33,15 +33,14 @@ public class Register extends AppCompatActivity {
     TextView textViewRedirectToLogin;
     ProgressBar progressBarRegister;
     FirebaseAuth mAuth;
+    FirebaseUser currentUser;
     String email, password;
 
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            openMainActivity();
-        }
+         currentUser = mAuth.getCurrentUser();
+         openMainActivity();
     }
 
     @Override
@@ -55,7 +54,6 @@ public class Register extends AppCompatActivity {
         progressBarRegister = findViewById(R.id.progressBarRegister);
 
         mAuth = FirebaseAuth.getInstance();
-
 
         textViewRedirectToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,23 +69,15 @@ public class Register extends AppCompatActivity {
                 password = editTextRegisterPassword.getText().toString();
 
                 progressBarRegister.setVisibility(View.VISIBLE);
-                if(TextUtils.isEmpty(email)){
-                    showToastAndReturn("Enter Email");
-                }
-                if(TextUtils.isEmpty(password)){
-                    showToastAndReturn("Create Password");
-                }
 
-                String userId = mAuth.getCurrentUser().getUid();
-                DatabaseReference userDatabaseRef = root.child("UserData").child(userId);
-                userDatabaseRef.child("email").setValue(email);
+                createAccount(email, password);
 
-                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                completedRegistration(task);
-                            }
-                        });
+
+//                String userId = mAuth.getCurrentUser().getUid();
+//                DatabaseReference userDatabaseRef = root.child("UserData").child(userId);
+//                userDatabaseRef.child("email").setValue(email);
+
+
             }
         });
     }
@@ -99,25 +89,45 @@ public class Register extends AppCompatActivity {
     }
 
     public void openMainActivity(){
-        Intent intent = new Intent (getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    public void showToastAndReturn(String string){
-        Toast.makeText(Register.this, string, Toast.LENGTH_SHORT);
-        return;
-    }
-
-    public void completedRegistration(Task task){
-        progressBarRegister.setVisibility(View.GONE);
-        if (task.isSuccessful()) {
-            showToast("Account Created");
-        } else {
-            showToast("Email Already Used");
+        if(currentUser != null) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
+
     public void showToast(String string){
-        Toast.makeText(Register.this, string, Toast.LENGTH_SHORT);
+        Toast.makeText(Register.this, string, Toast.LENGTH_SHORT).show();
     }
+
+    public void checkEditTextIfEmpty(String string, String text){
+        if(TextUtils.isEmpty(string)){
+            showToast(text);
+        }
+
+    }
+
+    public void createAccount(String email, String password){
+
+        if(TextUtils.isEmpty(email) && TextUtils.isEmpty(password)) {
+            checkEditTextIfEmpty(email, "Enter Email");
+            checkEditTextIfEmpty(password, "Create Password");
+        }else{
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    progressBarRegister.setVisibility(View.GONE);
+                    if (task.isSuccessful()) {
+                        showToast("Account Created");
+                    } else {
+                        showToast("Email Already Used");
+                    }
+                }
+            });
+        }
+    }
+
+
+
+
 }

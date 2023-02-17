@@ -28,23 +28,21 @@ public class SignIn extends AppCompatActivity {
     TextView textViewRedirectToRegister;
     ProgressBar progressBarLogin;
     FirebaseAuth mAuth;
+    FirebaseUser currentUser;
+    String email, password;
+
 
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Intent intent = new Intent (getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        currentUser = mAuth.getCurrentUser();
+        openMainActivityStart();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-
 
         editTextLoginEmail = findViewById(R.id.editTextLoginEmail);
         editTextLoginPassword = findViewById(R.id.editTextLoginPassword);
@@ -53,58 +51,78 @@ public class SignIn extends AppCompatActivity {
         progressBarLogin = findViewById(R.id.progressBarLogin);
         mAuth = FirebaseAuth.getInstance();
 
-
         textViewRedirectToRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent (getApplicationContext(), com.example.stims_v9.Login.Register.class);
-                startActivity(intent);
-                finish();
+                openRegisterActivity();
             }
         });
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email, password;
                 email = editTextLoginEmail.getText().toString();
                 password = editTextLoginPassword.getText().toString();
+
                 progressBarLogin.setVisibility(View.VISIBLE);
-                if(TextUtils.isEmpty(email)){
-                    Toast.makeText(SignIn.this, "Enter Email", Toast.LENGTH_SHORT);
-                    return;
-                }
-                if(TextUtils.isEmpty(password)){
-                    Toast.makeText(SignIn.this, "Enter Password", Toast.LENGTH_SHORT);
-                    return;
-                }
 
-                mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressBarLogin.setVisibility(View.GONE);
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(SignIn.this, "Sign In Successful.",
-                                            Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-
-
-                                } else {
-                                    Toast.makeText(SignIn.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-    }
-
+                verifyAccount();
+            }
 
         });
 
+    }
+    public void showToast(String string){
+        Toast.makeText(SignIn.this, string, Toast.LENGTH_SHORT).show();
+    }
+
+    public void checkEditTextIfEmpty(String string, String text){
+        if(TextUtils.isEmpty(string)){
+            showToast(text);
+        }
+    }
+
+    public void openRegisterActivity(){
+        Intent intent = new Intent (getApplicationContext(), Register.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void openMainActivityStart(){
+        if(currentUser != null) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+    public void openMainActivity(){
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+    }
+
+    public void verifyAccount(){
+
+        if(TextUtils.isEmpty(email) && TextUtils.isEmpty(password)){
+            checkEditTextIfEmpty(email, "Enter Email");
+            checkEditTextIfEmpty(password, "Enter Password");
+        }else{
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    progressBarLogin.setVisibility(View.GONE);
+                    if (task.isSuccessful()) {
+                        openMainActivity();
+                        showToast("Sign In Successfully");
+                    } else {
+                        showToast("Wrong Password or Email");
+                    }
+                }
+            });
+        }
+    }
 
 
 
-}
+
 }
