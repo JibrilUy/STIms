@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -44,17 +45,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayUseLogoEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setLogo(R.mipmap.stims_launcher_round);
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setDisplayUseLogoEnabled(true);
+//        actionBar.setIcon(R.mipmap.stims_launcher_round);
+//        actionBar.setDisplayShowHomeEnabled(true);
+//        actionBar.setDisplayShowCustomEnabled(true);
+//        actionBar.setDisplayShowTitleEnabled(false);
+//        actionBar.isHideOnContentScrollEnabled();
+//        actionBar.setLogo(R.mipmap.stims_launcher_round);
 
-        View customView = getLayoutInflater().inflate(R.layout.action_bar_custom_view,null);
-        actionBar.setCustomView(customView);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        ImageButton imageButton = customView.findViewById(R.id.imageButton);
+        View customView2 = getLayoutInflater().inflate(R.layout.action_bar_custom_view, toolbar, false);
+        ImageButton imageButton = customView2.findViewById(R.id.imageButton);
+        toolbar.addView(customView2);
+
+//
+//        View customView = getLayoutInflater().inflate(R.layout.action_bar_custom_view,null);
+//        actionBar.setCustomView(customView);
+//        ImageButton imageButton = customView.findViewById(R.id.imageButton);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
