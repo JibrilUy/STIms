@@ -4,12 +4,15 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.stims_v9.Login.Register;
 import com.example.stims_v9.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,6 +35,9 @@ public class EditProfile extends Fragment {
     final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
     DatabaseReference root = studentDatabase.getReference();
 
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +46,7 @@ public class EditProfile extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -74,8 +81,23 @@ public class EditProfile extends Fragment {
        String text = editText.getText().toString();
        return text;
     }
+
+    public void updateUserData(String value, DatabaseReference databaseReference,String pathString){
+        if(!TextUtils.isEmpty(value)){
+            databaseReference.child(pathString).setValue(value);
+        }
+    }
+
+    public void showToast(String string){
+        Toast.makeText(getActivity(), string, Toast.LENGTH_SHORT).show();
+    }
+
+
     public void addUserData(){
+
+        showToast("Info Updated");
         String userId = mAuth.getCurrentUser().getUid();
+        DatabaseReference userDatabaseRef = root.child("UserData").child(userId);
 
         userEmail = currentUser.getEmail();
         userName = getTextOutOfEditText(editTextProfileName);
@@ -84,13 +106,14 @@ public class EditProfile extends Fragment {
         userParentEmail = getTextOutOfEditText(editTextProfileParentEmail);
         userQuote = getTextOutOfEditText(editTextProfileQuote);
 
-        DatabaseReference userDatabaseRef = root.child("UserData").child(userId);
         userDatabaseRef.child("email").setValue(userEmail);
-        userDatabaseRef.child("name").setValue(userName);
-        userDatabaseRef.child("student_number").setValue(userStudentNumber);
-        userDatabaseRef.child("section").setValue(userSection);
-        userDatabaseRef.child("parent_email").setValue(userParentEmail);
-        userDatabaseRef.child("quote").setValue(userQuote);
+
+        updateUserData(userName, userDatabaseRef,"name");
+        updateUserData(userStudentNumber, userDatabaseRef,"student_number");
+        updateUserData(userSection, userDatabaseRef,"section");
+        updateUserData(userParentEmail, userDatabaseRef,"parent_email");
+        updateUserData(userQuote, userDatabaseRef,"quote");
+
 
     }
 

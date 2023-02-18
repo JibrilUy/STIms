@@ -85,14 +85,33 @@
             android:textColor="@color/sti_white"
             android:textColorHint="@color/sti_white" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+
+        >
+
         <Button
             android:id="@+id/btnAddUserData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:backgroundTint="@color/grey3"
+            android:text="UPDATE"
+            android:marginLeft=""
+            android:textColor="@color/sti_white" />
+
+        <Button
+            android:id="@+id/btnProfileEditExit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:backgroundTint="@color/grey3"
             android:text="UPDATE"
             android:textColor="@color/sti_white" />
+    </LinearLayout>
+
     </LinearLayout>
 
 
