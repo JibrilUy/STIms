@@ -29,30 +29,160 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
+            android:src="@mipmap/stims_launcher_round"
             tools:srcCompat="@tools:sample/avatars" />
 
-        <TextView
-            android:id="@+id/textViewProfileEmail"
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="20dp"
             android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:gravity="center"
-            android:textColor="@color/sti_white"
-            />
+            android:layout_marginEnd="40dp">
 
-        <TextView
-            android:id="@+id/textViewUserNameProfile"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sti_white"
+                android:text="Name: "/>
+
+            <TextView
+                android:id="@+id/textViewProfileName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sti_white"
+                />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
+            android:orientation="horizontal"
             android:gravity="center"
-            android:textColorHint="@color/white"
-            android:textColor="@color/white"
-            />
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sti_white"
+                android:text="Section: "/>
+
+            <TextView
+                android:id="@+id/textViewProfileSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/white"
+                android:textColor="@color/white"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sti_white"
+                android:text="Email: "/>
+
+            <TextView
+                android:id="@+id/textViewProfileEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sti_white"
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sti_white"
+                android:text="Student No.: "/>
+
+            <TextView
+                android:id="@+id/textViewProfileStudentNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sti_white"
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sti_white"
+                android:text="Parent Email: "/>
+
+            <TextView
+                android:id="@+id/textViewProfileParentEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/white"
+                android:textColor="@color/white"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sti_white"
+                android:text="Quote: "/>
+
+            <TextView
+                android:id="@+id/textViewProfileQuote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/white"
+                android:textColor="@color/white"
+                />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnEditProfile"
@@ -61,17 +191,18 @@
             android:layout_marginTop="15dp"
             android:layout_marginStart="80dp"
             android:layout_marginEnd="80dp"
-            android:hint="EDIT"
+            android:hint="EDIT PROFILE"
             android:textColorHint="@color/sti_white"
             android:backgroundTint="@color/sti_black"
             />
+
 
         <Button
             android:id="@+id/btnSignOut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/sti_black"
-            android:hint="Sign Out"
+            android:hint="SIGN OUT"
             android:textColorHint="@color/sti_white"
             android:layout_marginStart="80dp"
             android:layout_marginEnd="80dp"/>
@@ -83,8 +214,9 @@
             android:layout_marginStart="80dp"
             android:layout_marginEnd="80dp"
             android:backgroundTint="@color/sti_black"
-            android:hint="Exit"
+            android:hint="EXIT"
             android:textColorHint="@color/sti_white" />
+
 
     </LinearLayout>
 

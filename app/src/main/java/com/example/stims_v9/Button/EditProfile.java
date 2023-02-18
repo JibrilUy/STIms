@@ -1,5 +1,6 @@
 package com.example.stims_v9.Button;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -28,7 +29,7 @@ public class EditProfile extends Fragment {
 
     EditText editTextProfileName, editTextProfileStudentNumber, editTextProfileSection, editTextProfileParentEmail, editTextProfileQuote;
 
-    Button btnAddUserData;
+    Button btnAddUserData, btnProfileEditExit;
 
     String userEmail, userName, userStudentNumber, userSection, userParentEmail, userQuote;
 
@@ -58,12 +59,20 @@ public class EditProfile extends Fragment {
         editTextProfileQuote = v.findViewById(R.id.editTextProfileQuote);
 
         btnAddUserData = v.findViewById(R.id.btnAddUserData);
+        btnProfileEditExit = v.findViewById(R.id.btnProfileEditExit);
 
 
         btnAddUserData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addUserData();
+            }
+        });
+
+        btnProfileEditExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openProfileActivity();
             }
         });
 
@@ -92,6 +101,11 @@ public class EditProfile extends Fragment {
         Toast.makeText(getActivity(), string, Toast.LENGTH_SHORT).show();
     }
 
+    public void openProfileActivity(){
+        Intent intent = new Intent (getActivity(), com.example.stims_v9.Button.ProfileActivity.class);
+        startActivity(intent);
+    }
+
 
     public void addUserData(){
 
@@ -107,6 +121,7 @@ public class EditProfile extends Fragment {
         userQuote = getTextOutOfEditText(editTextProfileQuote);
 
         userDatabaseRef.child("email").setValue(userEmail);
+        userDatabaseRef.child("UID").setValue(userId);
 
         updateUserData(userName, userDatabaseRef,"name");
         updateUserData(userStudentNumber, userDatabaseRef,"student_number");

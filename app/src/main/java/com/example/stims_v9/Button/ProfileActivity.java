@@ -1,5 +1,6 @@
 package com.example.stims_v9.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -17,14 +18,17 @@ import com.example.stims_v9.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ProfileActivity extends AppCompatActivity {
 
     Button btnSignOut, btnExit, btnEditProfile;
 
-    TextView textViewProfileEmail, textViewUserNameProfile;
+    TextView textViewProfileEmail, textViewProfileName, textViewProfileStudentNumber, textViewProfileSection, textViewProfileParentEmail, textViewProfileQuote;
     FirebaseUser currentUser;
     FirebaseAuth mAuth;
 
@@ -48,15 +52,18 @@ public class ProfileActivity extends AppCompatActivity {
         btnEditProfile = findViewById(R.id.btnEditProfile);
 
         textViewProfileEmail = findViewById(R.id.textViewProfileEmail);
-        textViewUserNameProfile = findViewById(R.id.textViewUserNameProfile);
+        textViewProfileName = findViewById(R.id.textViewProfileName);
+        textViewProfileStudentNumber = findViewById(R.id.textViewProfileStudentNumber);
+        textViewProfileSection = findViewById(R.id.textViewProfileSection);
+        textViewProfileParentEmail = findViewById(R.id.textViewProfileParentEmail);
+        textViewProfileQuote = findViewById(R.id.textViewProfileQuote);
 
         imageViewProfilePic = findViewById(R.id.imageViewProfilePic);
 
+        displayUserData();
 
-        if (currentUser != null) {
-            userEmail = currentUser.getEmail();
-            textViewProfileEmail.setText(userEmail);
-        }
+
+
 
 
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
@@ -67,9 +74,6 @@ public class ProfileActivity extends AppCompatActivity {
                 replaceFragment(new EditProfile());
             }
         });
-
-
-
 
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +88,14 @@ public class ProfileActivity extends AppCompatActivity {
                 openMainActivity();
             }
         });
+
+
+
+
+
+
+
+
     }
 
     public void openSignInActivity(){
@@ -116,6 +128,41 @@ public class ProfileActivity extends AppCompatActivity {
     public void hideText(TextView textView){
         textView.setVisibility(View.GONE);
     }
+
+    public void displayTextOnTextView(TextView textView, String string){
+        textView.setText(string);
+    }
+
+    public void displayUserData(){
+        getValueFromUserData("email", textViewProfileEmail);
+        getValueFromUserData("name", textViewProfileName);
+        getValueFromUserData("student_number", textViewProfileStudentNumber);
+        getValueFromUserData("section", textViewProfileSection);
+        getValueFromUserData("parent_email", textViewProfileParentEmail);
+        getValueFromUserData("quote", textViewProfileQuote);
+    }
+    public void getValueFromUserData(String childNode, TextView textView){
+
+        String userId = mAuth.getCurrentUser().getUid();
+        DatabaseReference userDatabaseRef = root.child("UserData").child(userId);
+        userDatabaseRef.child(childNode).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String userData = snapshot.getValue(String.class);
+                    displayTextOnTextView(textView, userData);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+
+
+
 
 
 

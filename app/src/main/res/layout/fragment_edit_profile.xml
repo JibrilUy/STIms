@@ -100,15 +100,16 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/grey3"
             android:text="UPDATE"
-            android:marginLeft=""
+            android:layout_marginRight="10dp"
             android:textColor="@color/sti_white" />
 
         <Button
             android:id="@+id/btnProfileEditExit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/grey3"
-            android:text="UPDATE"
+            android:layout_marginLeft="10dp"
+            android:backgroundTint="@color/sti_grey_selected"
+            android:text="EXIT"
             android:textColor="@color/sti_white" />
     </LinearLayout>
 
