@@ -15,6 +15,16 @@
         android:layout_marginTop="40dp"
         android:background="@color/sti_blue"
         >
+
+        <ImageView
+            android:id="@+id/imageViewEditProfilePic"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/stims_launcher_round"
+            tools:srcCompat="@tools:sample/avatars" />
+
     <EditText
         android:id="@+id/editTextProfileName"
         android:layout_width="match_parent"

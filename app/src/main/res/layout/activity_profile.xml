@@ -26,11 +26,11 @@
 
         <ImageView
             android:id="@+id/imageViewProfilePic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_marginTop="50dp"
-            android:src="@mipmap/stims_launcher_round"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:layout_gravity="center"
+             />
 
 
 
@@ -43,6 +43,7 @@
             android:layout_marginEnd="40dp">
 
             <TextView
+                android:id="@+id/textViewProfileBlank1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/sti_white"
@@ -69,6 +70,7 @@
             android:layout_marginEnd="40dp">
 
             <TextView
+                android:id="@+id/textViewProfileBlank2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/sti_white"
@@ -94,6 +96,7 @@
             android:layout_marginEnd="40dp">
 
             <TextView
+                android:id="@+id/textViewProfileBlank3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/sti_white"
@@ -119,6 +122,7 @@
             android:layout_marginEnd="40dp">
 
             <TextView
+                android:id="@+id/textViewProfileBlank4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/sti_white"
@@ -144,6 +148,7 @@
             android:layout_marginEnd="40dp">
 
             <TextView
+                android:id="@+id/textViewProfileBlank5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/sti_white"
@@ -169,6 +174,7 @@
             android:layout_marginEnd="40dp">
 
             <TextView
+                android:id="@+id/textViewProfileBlank6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/sti_white"
@@ -216,6 +222,16 @@
             android:backgroundTint="@color/sti_black"
             android:hint="EXIT"
             android:textColorHint="@color/sti_white" />
+        <Button
+            android:id="@+id/btnTrial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="80dp"
+            android:layout_marginEnd="80dp"
+            android:backgroundTint="@color/sti_black"
+            android:hint="trial"
+            android:textColorHint="@color/sti_white" />
+
 
 
     </LinearLayout>
