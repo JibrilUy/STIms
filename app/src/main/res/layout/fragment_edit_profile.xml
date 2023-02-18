@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Button.EditProfile"
+    android:background="@color/sti_grey">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center|top"
+        android:layout_marginTop="40dp"
+        android:background="@color/sti_blue"
+        >
+    <EditText
+        android:id="@+id/editTextProfileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        android:hint="Enter Name"
+        android:minHeight="48dp"
+        android:maxLength="50"
+        android:inputType="text"
+        android:textColor="@color/sti_white"
+        android:textColorHint="@color/sti_white" />
+
+    <EditText
+        android:id="@+id/editTextProfileStudentNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="40dp"
+        android:hint="Enter Student Number"
+        android:inputType="number"
+        android:minHeight="48dp"
+        android:maxLength="50"
+        android:textColor="@color/sti_white"
+        android:textColorHint="@color/sti_white" />
+
+    <EditText
+        android:id="@+id/editTextProfileSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="40dp"
+        android:hint="Enter Section"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:maxLength="50"
+        android:textColor="@color/sti_white"
+        android:textColorHint="@color/sti_white" />
+
+        <EditText
+            android:id="@+id/editTextProfileParentEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="40dp"
+            android:hint="Enter Parents Email"
+            android:inputType="textEmailAddress"
+            android:minHeight="48dp"
+            android:maxLength="50"
+            android:textColor="@color/sti_white"
+            android:textColorHint="@color/sti_white" />
+
+        <EditText
+            android:id="@+id/editTextProfileQuote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="40dp"
+            android:hint="Enter Quote"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:maxLength="50"
+            android:textColor="@color/sti_white"
+            android:textColorHint="@color/sti_white" />
+
+        <Button
+            android:id="@+id/btnAddUserData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@color/grey3"
+            android:text="UPDATE"
+            android:textColor="@color/sti_white" />
+    </LinearLayout>
+
+
+</FrameLayout>

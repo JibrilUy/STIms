@@ -45,7 +45,7 @@ public class ScanFragment extends Fragment {
     String date = currentDate;
     String nameModel, selectedSubject;
     Button btn_scan ;
-    MaterialButton btn_add_subjects, btn_subjects;
+    MaterialButton btn_subjects;
     Spinner spinner_subjects;
     TextView text_view_subject_selected;
 

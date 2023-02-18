@@ -73,9 +73,7 @@ public class Register extends AppCompatActivity {
                 createAccount(email, password);
 
 
-//                String userId = mAuth.getCurrentUser().getUid();
-//                DatabaseReference userDatabaseRef = root.child("UserData").child(userId);
-//                userDatabaseRef.child("email").setValue(email);
+
 
 
             }
