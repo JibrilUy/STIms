@@ -5,6 +5,8 @@
         <item name="colorPrimary">@color/sti_blue</item>
         <item name="colorPrimaryDark">@color/sti_blue</item>
         <item name="colorAccent">@color/sti_blue</item>
+
+        <item name="titleTextColor">@color/sti_beige</item>
         
         <item name="actionBarStyle">@style/MyActionBarStyle</item>
 

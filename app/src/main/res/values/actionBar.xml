@@ -6,7 +6,8 @@
         <item name="background">@color/sti_blue</item>
 
         <!-- Set the text color of the action bar title and icons -->
-        <item name="titleTextColor">@color/sti_white</item>
+        <item name="titleTextColor">@color/sti_beige</item>
+        <item name="titleTextStyle">@style/Theme.MaterialComponents</item>
 
 
     </style>
