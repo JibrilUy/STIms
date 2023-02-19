@@ -57,7 +57,7 @@ public class ScanFragment extends Fragment {
     private final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private final DatabaseReference root = studentDatabase.getReference();
 
-    DatabaseReference subjectsRef = studentDatabase.getReference("Subjects");
+    DatabaseReference everySubjectRef = root.child("Subjects");
 
 
     @Override
@@ -81,11 +81,10 @@ public class ScanFragment extends Fragment {
         btn_subjects = v.findViewById(R.id.btn_subjects);
         btn_scan = v.findViewById(R.id.btn_scan);
 
-        subjectsRef.addValueEventListener(new ValueEventListener() {
+        everySubjectRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 updateSubjectSpinner(dataSnapshot);
-
                 if(isAdded()) {
                     ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
                     spinner_subjects.setAdapter(subjectAdapter);
@@ -117,21 +116,21 @@ public class ScanFragment extends Fragment {
                     });
                     builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
 
-                            DatabaseReference logsRef = root.child("Logs").child(date).child(selectedSubject).child(scanResult);
-                            DatabaseReference scansRef = root.child("Scans").child(scanResult).child(selectedSubject).child(date);
+                            DatabaseReference attendanceRootRef = root.child("Attendance").child(selectedSubject).child(scanResult).child(date);
+//                            DatabaseReference scansRef = root.child("Scans").child(scanResult).child(selectedSubject).child(date);
 
                             DatabaseReference suggestionRef = root.child("Suggestions");
                             DatabaseReference userRes = root.child("Users").child(scanResult);
 
-                            logsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            attendanceRootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.child("Check_In").exists()) {
-                                        checkOutData(scansRef, time);
-                                        checkOutData(logsRef, time);
+//                                        checkOutData(scansRef, time);
+                                        checkOutData(attendanceRootRef, time);
                                     } else {
-                                        checkInData(logsRef, scanResult, date, time, selectedSubject);
-                                        checkInData(scansRef, scanResult, date, time, selectedSubject);
+                                        checkInData(attendanceRootRef,date, time);
+//                                        checkInData(scansRef, scanResult, date, time, selectedSubject);
                                     }
                                 }
 
@@ -197,11 +196,9 @@ public class ScanFragment extends Fragment {
             subjectList.add(value);
         }
     }
-    public void checkInData(DatabaseReference databaseReferenceRef, String name, String date, String check_in, String subject){
-        databaseReferenceRef.child("Name").setValue(name).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check In Successfully", Toast.LENGTH_SHORT).show());
+    public void checkInData(DatabaseReference databaseReferenceRef, String date, String check_in){
         databaseReferenceRef.child("Date").setValue(date);
         databaseReferenceRef.child("Check_In").setValue(check_in);
-        databaseReferenceRef.child("Subject").setValue(subject);
 
     }
 

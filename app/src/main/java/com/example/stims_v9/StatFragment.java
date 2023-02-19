@@ -41,16 +41,15 @@ import java.util.Date;
 
 public class StatFragment extends Fragment {
 
-    //Initiating Variables
 
-    //Initiating Firebase Database
+
+
     private final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private final DatabaseReference root = studentDatabase.getReference();
     private final DatabaseReference studentName = root.child("Users");
-    private final DatabaseReference subjectsRef = root.child("Subjects");
-    private final DatabaseReference violationsRef = root.child("Violations");
+    private final DatabaseReference attendanceRef = root.child("Attendance");
 
-
+    private final DatabaseReference everySubjectsRef = root.child("Subjects");
 
     Spinner spinner_subject_stat_fragment;
 
@@ -60,81 +59,52 @@ public class StatFragment extends Fragment {
 
     String selectedSubject;
 
-    MaterialButton btn_search_student, btn_calendar_view;
+    MaterialButton btnStatFragEveryStudent, btnCalendarView;
     SearchView search_view;
+    CalendarView calendarView;
+    Calendar calendar = Calendar.getInstance();
 
+    RecyclerView recyclerView;
 @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
     View v = inflater.inflate(R.layout.fragment_stat, container, false);
 
     spinner_subject_stat_fragment = v.findViewById(R.id.spinner_subject_stat_fragment);
 
-    RecyclerView recyclerView = v.findViewById(R.id.recycler_view_);
+    calendarView = v.findViewById(R.id.calendarView);
+    recyclerView = v.findViewById(R.id.recycler_view_);
+    search_view = v.findViewById(R.id.search_view);
 
-    recyclerView.setHasFixedSize(true);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    btnCalendarView = v.findViewById(R.id.btnCalendarView);
+    btnStatFragEveryStudent = v.findViewById(R.id.btnStatFragEveryStudent);
+
 
     list = new ArrayList<>();
     adapter = new MyAdapter(getActivity(), list);
     subjectList = new ArrayList<>();
 
+    calendarView.setVisibility(View.GONE);
+    recyclerView.setHasFixedSize(true);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     recyclerView.setAdapter(adapter);
 
-    CalendarView calendarView = v.findViewById(R.id.calendarView);
-    calendarView.setVisibility(View.GONE);
-    btn_calendar_view = v.findViewById(R.id.btn_calendar_view);
-    btn_calendar_view.setOnClickListener(new View.OnClickListener() {
+    btnCalendarView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            int visibility = calendarView.getVisibility();
-            if (visibility == View.GONE || visibility == View.INVISIBLE) {
-                calendarView.setVisibility(View.VISIBLE);
-            } else {
-                calendarView.setVisibility(View.GONE);
-            }
+            hideCalendarView();
         }
     });
 
-    btn_search_student = v.findViewById(R.id.btn_student_search);
-    btn_search_student.setOnClickListener(new View.OnClickListener() {
+    btnStatFragEveryStudent.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(getActivity(), StudentList.class);
-            startActivity(intent);
+            showEveryStudentActivity();
         }
     });
 
+    updateSubjectList();
 
-
-
-    subjectsRef.addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            subjectList.clear();
-            for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                String value = childSnapshot.getValue(String.class);
-                subjectList.add(value);
-            }
-            adapter.notifyDataSetChanged();
-
-            if(isAdded()) {
-                ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
-                spinner_subject_stat_fragment.setAdapter(subjectAdapter);
-            }
-        }
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {   }
-    });
-
-    spinner_subject_stat_fragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            selectedSubject = spinner_subject_stat_fragment.getSelectedItem().toString();
-        }
-        @Override
-        public void onNothingSelected(AdapterView<?> adapterView) {   } });
 
 
 
@@ -143,15 +113,13 @@ public class StatFragment extends Fragment {
         @Override
         public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
 
-            Calendar calendar = Calendar.getInstance();
             calendar.set(year, month, dayOfMonth);
             long date = calendar.getTimeInMillis();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMMM, d,EEEE");
             String dateRef = sdf.format(new Date(date));
 
-            DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                    .getReference("Logs");
-            DatabaseReference datePickerRef = root.child(dateRef).child(selectedSubject);
+
+            DatabaseReference datePickerRef = attendanceRef.child(selectedSubject).child(selectedSubject);
 
             datePickerRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -169,15 +137,7 @@ public class StatFragment extends Fragment {
             });
         }
     });
-    search_view = v.findViewById(R.id.search_view);
 
-    search_view.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            btn_calendar_view.setVisibility(View.GONE);
-            btn_search_student.setVisibility(View.GONE);
-        }
-    });
 
     search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
@@ -253,4 +213,63 @@ public class StatFragment extends Fragment {
     });
         return v;
     }
-}
+
+    public void hideCalendarView(){
+        int visibility = calendarView.getVisibility();
+        if (visibility == View.GONE || visibility == View.INVISIBLE) {
+            calendarView.setVisibility(View.VISIBLE);
+        } else {
+            calendarView.setVisibility(View.GONE);
+        }
+    }
+
+    public void hideBtnForSearchView(){
+                btnCalendarView.setVisibility(View.GONE);
+                btnStatFragEveryStudent.setVisibility(View.GONE);
+    }
+
+    public void showEveryStudentActivity(){
+        Intent intent = new Intent(getActivity(), StudentList.class);
+        startActivity(intent);
+    }
+
+    private void updateSubjectList() {
+        everySubjectsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                subjectList.clear();
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    String value = childSnapshot.getValue(String.class);
+                    subjectList.add(value);
+                }
+                adapter.notifyDataSetChanged();
+                if(isAdded()) {
+                    ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
+                    spinner_subject_stat_fragment.setAdapter(subjectAdapter);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {   }
+        });
+
+        spinner_subject_stat_fragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedSubject = spinner_subject_stat_fragment.getSelectedItem().toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {   } });
+
+    }
+
+
+
+
+    }
+
+
+
+
+
+
+
