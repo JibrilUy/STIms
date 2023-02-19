@@ -149,7 +149,8 @@ public class StatFragment extends Fragment {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMMM, d,EEEE");
             String dateRef = sdf.format(new Date(date));
 
-            DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Logs");
+            DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                    .getReference("Logs");
             DatabaseReference datePickerRef = root.child(dateRef).child(selectedSubject);
 
             datePickerRef.addValueEventListener(new ValueEventListener() {

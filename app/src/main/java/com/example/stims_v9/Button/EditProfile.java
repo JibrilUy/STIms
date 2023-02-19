@@ -43,6 +43,8 @@ public class EditProfile extends Fragment {
     FirebaseUser currentUser;
     FirebaseAuth mAuth;
 
+    Uri imageUri;
+
     EditText editTextProfileName, editTextProfileStudentNumber, editTextProfileSection, editTextProfileParentEmail, editTextProfileQuote;
 
     Button btnAddUserData, btnProfileEditExit;
@@ -92,6 +94,10 @@ public class EditProfile extends Fragment {
             @Override
             public void onClick(View view) {
                 addUserData();
+                if(imageUri == null) {
+                    saveImageUriToSharedPreferences(imageUri);
+                    saveImageToInternalStorage(imageUri);
+                }
             }
         });
 
@@ -163,11 +169,10 @@ public class EditProfile extends Fragment {
         intent.setType("image/*");
         startActivityForResult(intent, PICK_IMAGE_REQUEST_CODE);
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            Uri imageUri = data.getData();
+            imageUri = data.getData();
             // Save the image URI in shared preferences
             saveImageUriToSharedPreferences(imageUri);
             // Set the image in the ImageView
@@ -180,18 +185,11 @@ public class EditProfile extends Fragment {
             Log.d("SAVE_IMAGE_URI", "Image URI is null");
             return;
         }
-
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("image_uri", imageUri.toString());
-        boolean saved = editor.commit();
-        if (saved) {
-            Log.d("SAVE_IMAGE_URI", "Image URI saved: " + imageUri);
-        } else {
-            Log.d("SAVE_IMAGE_URI", "Failed to save image URI");
-        }
+        editor.apply();
     }
-
 
 
     private Uri getImageUriFromSharedPreferences() {

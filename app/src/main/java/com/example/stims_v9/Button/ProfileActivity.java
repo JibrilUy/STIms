@@ -46,6 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 10;
 
 
+
     Button btnSignOut, btnExit, btnEditProfile, btnTrial;
 
     TextView textViewProfileBlank1,textViewProfileBlank2,textViewProfileBlank3,textViewProfileBlank4,textViewProfileBlank5,textViewProfileBlank6;
@@ -61,6 +62,8 @@ public class ProfileActivity extends AppCompatActivity {
     final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
     DatabaseReference root = studentDatabase.getReference();
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,15 +72,15 @@ public class ProfileActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
             // Permission is granted
-
-
-
-
         } else {
             // Request permission
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     PERMISSION_REQUEST_CODE);
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE  );
         }
 
         mAuth = FirebaseAuth.getInstance();
@@ -86,17 +89,14 @@ public class ProfileActivity extends AppCompatActivity {
         initializeVariables();
 
         displayUserData();
+        savedImageUri = getImageUriFromSharedPreferences();
 
-        if (savedImageUri != null) {
-        }
 
 
         btnTrial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                savedImageUri = getImageUriFromSharedPreferences();
                 imageViewProfilePic.setImageURI(savedImageUri);
-
             }
         });
 
@@ -265,10 +265,10 @@ public class ProfileActivity extends AppCompatActivity {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted, access media files
-
             }
         }
     }
+
     private Uri getImageUriFromSharedPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
         String imageUriString = sharedPreferences.getString("image_uri", "");
@@ -279,6 +279,45 @@ public class ProfileActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    private void saveImageToInternalStorage(Uri imageUri) {
+        Log.d("SAVE_IMAGE_URI", "Attempting to save image to internal storage with URI: " + imageUri);
+
+        String imageName = "STIms_profile_image.jpg";
+        try {
+            // Open a stream to read the image file
+            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            // Create a new file in internal storage
+            File internalFile = new File(getFilesDir(), imageName);
+            // Open a stream to write the image file to internal storage
+            OutputStream outputStream = new FileOutputStream(internalFile);
+            // Copy the image to internal storage
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            // Close the streams
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+
+            // Save the path of the new file to a shared preference or a database
+            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("image_path", internalFile.getAbsolutePath());
+            editor.apply();
+
+            Log.d("SAVE_IMAGE_URI", "Image saved successfully to internal storage at path: " + internalFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("SAVE_IMAGE_URI", "Error saving image to internal storage: " + e.getMessage());
+        }
+    }
+
+
+
+
 
 
 

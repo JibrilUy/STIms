@@ -2,10 +2,13 @@ package com.example.stims_v9;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -28,16 +31,16 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
 
     FirebaseAuth mAuth;
+    FirebaseUser currentUser;
+
+    Uri savedImageUri;
+
 
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
-            Intent intent = new Intent (this, com.example.stims_v9.Login.SignIn.class);
-            startActivity(intent);
-            finish();
-        }
+        currentUser = mAuth.getCurrentUser();
+        savedImageUri = getImageUriFromSharedPreferences();
     }
 
     @Override
@@ -54,13 +57,14 @@ public class MainActivity extends AppCompatActivity {
         View customView = getLayoutInflater().inflate(R.layout.action_bar_custom_view,null);
         actionBar.setCustomView(customView);
 
+
+
         ImageButton imageButton = customView.findViewById(R.id.imageButton);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent (getApplicationContext(), com.example.stims_v9.Button.ProfileActivity.class);
-                startActivity(intent);
-                finish();
+                openProfileActivity();
+
             }
         });
 
@@ -106,6 +110,31 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
+    }
+
+    public void openProfileActivity(){
+        Intent intent = new Intent (getApplicationContext(), com.example.stims_v9.Button.ProfileActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void openSignInActivity(){
+        if(currentUser == null){
+            Intent intent = new Intent (this, com.example.stims_v9.Login.SignIn.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    private Uri getImageUriFromSharedPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        String imageUriString = sharedPreferences.getString("image_uri", "");
+        if (!imageUriString.equals("")) {
+            Log.d("SAVE_IMAGE_URI", "Retrieved image URI from shared preferences: " + imageUriString);
+            return Uri.parse(imageUriString);
+        } else {
+            return null;
+        }
     }
 
 
