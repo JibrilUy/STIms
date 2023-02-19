@@ -11,28 +11,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etQR"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:textColor="@color/white"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:maxLength="50"
-        android:hint="Ex. Jibril_Uy"
-        />
+
 
     <Button
         android:id="@+id/btnGenerateQR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/grey2"
-        android:hint="@string/generate_amp_save_qr"
-        android:layout_marginTop="20dp"
+        android:hint="GENERATE QR"
+        android:layout_marginTop="120dp"
         android:textColorHint="@color/white"
-        android:layout_marginStart="80dp"
-        android:layout_marginEnd="80dp"/>
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"/>
+    <Button
+        android:id="@+id/btnSaveQR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/grey2"
+        android:hint="SAVE QR"
+        android:layout_marginTop="10dp"
+        android:textColorHint="@color/white"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"/>
 
 
     <ImageView

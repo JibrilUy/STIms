@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -23,6 +24,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -36,17 +42,21 @@ import java.util.Objects;
 
 public class QRFragment extends Fragment {
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+
+    private final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    private final DatabaseReference root = studentDatabase.getReference();
 
     EditText etQR;
-    Button btnGenerateQR, btnSignOut;
+    Button btnGenerateQR, btnSaveQR;
     ImageView imgQR;
-    String bitmap_name;
+    String bitmap_name, userId, userName, name;
+
+    Bitmap bitmap;
 
     FirebaseAuth mAuth;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,45 +64,47 @@ public class QRFragment extends Fragment {
         View v =  inflater.inflate(R.layout.fragment_q_r, container, false);
 
 
-        etQR = (EditText) v.findViewById(R.id.etQR);
-            imgQR = (ImageView) v.findViewById(R.id.imgQR);
-            btnGenerateQR = (Button) v.findViewById(R.id.btnGenerateQR);
-            btnSignOut = v.findViewById(R.id.btnSignOut);
+            imgQR = v.findViewById(R.id.imgQR);
+            btnGenerateQR = v.findViewById(R.id.btnGenerateQR);
+            btnSaveQR = v.findViewById(R.id.btnSaveQR);
+
             mAuth = FirebaseAuth.getInstance();
+        userId = mAuth.getCurrentUser().getUid();
 
-
-
-
-            String inputText = etQR.getText().toString();
+        DatabaseReference userDataRef = root.child("UserData").child(userId);
+        userDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userName = dataSnapshot.child("name").getValue(String.class);
+            }
+            @Override
+            public void onCancelled (@NonNull DatabaseError error){   }});
 
 
 
                 btnGenerateQR.setOnClickListener(new View.OnClickListener() {
-
                     @Override
                     public void onClick(View view) {
-                        if(TextUtils.isEmpty(etQR.getText())){
 
-                            Toast.makeText(getActivity(), "NO TEXT", Toast.LENGTH_SHORT).show();
-
-                        }else{
-                            Toast.makeText(getActivity(), "QR ADDED TO GALLERY", Toast.LENGTH_SHORT).show();
+                        name = userName;
                             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 
                             try {
-                                BitMatrix bitMatrix = multiFormatWriter.encode(etQR.getText().toString(),
-                                        BarcodeFormat.QR_CODE, 275, 275);
-
+                                BitMatrix bitMatrix = multiFormatWriter.encode(userId, BarcodeFormat.QR_CODE, 275, 275);
                                 BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                                Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-
+                                bitmap = barcodeEncoder.createBitmap(bitMatrix);
                                 imgQR.setImageBitmap(bitmap);
-                                // BULLSHIT ITO
-                                saveImage(bitmap);
                             } catch (WriterException e) {
                                 e.printStackTrace();
                             }
-                        }
+                    }
+                });
+
+                btnSaveQR.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getActivity(), "QR ADDED TO GALLERY", Toast.LENGTH_SHORT).show();
+                        saveImage(bitmap);
                     }
                 });
 
@@ -102,13 +114,12 @@ public class QRFragment extends Fragment {
     }
     private void saveImage(Bitmap bitmap){
         OutputStream fos;
-        bitmap_name = etQR.getText().toString();
 
         try{
             ContentResolver resolver = getActivity().getContentResolver();
 
             ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME,"STIms_QR_Generated_" + bitmap_name + ".jpg");
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME,"STIms_QR_Generated_" + "something" + ".jpg");
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE,"Image/jpg");
             Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
 

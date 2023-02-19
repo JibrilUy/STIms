@@ -93,7 +93,6 @@ public class StudentList extends AppCompatActivity {
             public void onClick(View view) {
 
                 DatabaseReference everyStudentRef = root.child("Students").child(selectedSubject);
-
                 everyStudentRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -103,7 +102,6 @@ public class StudentList extends AppCompatActivity {
                             list2.add(nameModel);
                         }
                         recyclerView2.setAdapter(adapter2);
-
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {  }
