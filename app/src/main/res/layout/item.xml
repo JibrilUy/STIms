@@ -4,14 +4,17 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="8dp"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="20dp"
     android:padding="10dp"
-    android:layout_margin="10dp"
-    android:backgroundTint="@color/grey">
+    android:layout_marginStart="40dp"
+    android:layout_marginEnd="40dp"
+    android:layout_marginTop="10dp"
+    android:backgroundTint="@color/sti_blue">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="wrap_content"
@@ -28,7 +31,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Jibril"
+                android:text="Jibril Uy"
                 android:textStyle="bold"
                 android:textSize="17sp"
                 android:layout_marginStart="20dp"
@@ -37,28 +40,7 @@
 
 
         </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Subject: "
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/white"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Art of Campione"
-            android:textStyle="bold"
-            android:textSize="17sp"
-            android:layout_marginStart="20dp"
-            android:id="@+id/text_view_subject"
-            android:textColor="@color/white"/>
-        </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -128,29 +110,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Violation: "
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:layout_marginLeft="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="God"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:textSize="17sp"
-                android:layout_marginStart="20dp"
-                android:id="@+id/text_view_violation"/>
 
-        </LinearLayout>
 
     </LinearLayout>
 

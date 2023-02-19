@@ -1,14 +1,17 @@
 package com.example.stims_v9;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +26,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.stims_v9.Button.Capture;
 import com.example.stims_v9.Button.SubjectFragment;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,19 +44,21 @@ import java.util.Locale;
 public class ScanFragment extends Fragment {
 
     //Initialize variable
-    String currentDate = new SimpleDateFormat("yyyy, MMMM, d,EEEE", Locale.getDefault()).format(new Date());
-    String currentTime = new SimpleDateFormat("h:mm:a", Locale.getDefault()).format(new Date());
-    String time = currentTime;
-    String date = currentDate;
-    String nameModel, selectedSubject;
+    String date = new SimpleDateFormat("yyyy, MMMM, d,EEEE", Locale.getDefault()).format(new Date());
+    String time = new SimpleDateFormat("h:mm:a", Locale.getDefault()).format(new Date());
+    String nameModel, selectedSubject, userId, userName;
     Button btn_scan ;
     MaterialButton btn_subjects;
     Spinner spinner_subjects;
+    Switch switchCheckInAndOut;
     TextView text_view_subject_selected;
 
-    ArrayList<String> list2 = new ArrayList<>();
+    ArrayList<String> everyStudent = new ArrayList<>();
     ArrayList <String> subjectList = new ArrayList<>();
 
+    FirebaseAuth mAuth;
+    FirebaseUser currentUser;
+    boolean switchState;
 
     //Initialize FirebaseDatabase
     private final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -81,6 +88,19 @@ public class ScanFragment extends Fragment {
         btn_subjects = v.findViewById(R.id.btn_subjects);
         btn_scan = v.findViewById(R.id.btn_scan);
 
+        mAuth = FirebaseAuth.getInstance();
+        userId = mAuth.getCurrentUser().getUid();
+
+        switchCheckInAndOut = v.findViewById(R.id.switchCheckInAndOut);
+        switchCheckInAndOut.setVisibility(View.GONE);
+        switchCheckInAndOut.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                switchState = b;
+                changeSwitchText();
+            }
+        });
+
         everySubjectRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -108,7 +128,7 @@ public class ScanFragment extends Fragment {
                     result.getClass();
                     String scanResult = result.getContents();
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(scanResult);
+                    builder.setTitle("Student Name");
                     builder.setMessage("Selected Subject: "+ selectedSubject );
                     builder.setPositiveButton("CANCEL", (dialogInterface, i) -> {
                         Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
@@ -116,44 +136,56 @@ public class ScanFragment extends Fragment {
                     });
                     builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
 
-                            DatabaseReference attendanceRootRef = root.child("Attendance").child(selectedSubject).child(scanResult).child(date);
-//                            DatabaseReference scansRef = root.child("Scans").child(scanResult).child(selectedSubject).child(date);
 
-                            DatabaseReference suggestionRef = root.child("Suggestions");
-                            DatabaseReference userRes = root.child("Users").child(scanResult);
+                        DatabaseReference suggestionRef = root.child("Suggestions");
 
-                            attendanceRootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        DatabaseReference everyStudentRef = root.child("Students").child(selectedSubject);
+
+                        DatabaseReference userDataRef = root.child("UserData").child(scanResult);
+                        userDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                userName = dataSnapshot.child("name").getValue(String.class);
+                            }
+                            @Override
+                            public void onCancelled (@NonNull DatabaseError error){   }});
+
+                        everyStudentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                everyStudent.clear();
+                                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                                    nameModel = childSnapshot.getValue().toString();
+                                    everyStudent.add(nameModel);
+                                }
+                                if(!everyStudent.contains(userName)){
+                                    String name = userName;
+                                    everyStudentRef.push().child("student_name").setValue(name);
+                                    suggestionRef.push().setValue(scanResult);
+                                }
+
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {  }
+                        });
+
+
+                        DatabaseReference attendanceRootRef = root.child("Attendance").child(selectedSubject).child(date).child(scanResult);
+                        attendanceRootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.child("Check_In").exists()) {
-//                                        checkOutData(scansRef, time);
                                         checkOutData(attendanceRootRef, time);
                                     } else {
-                                        checkInData(attendanceRootRef,date, time);
-//                                        checkInData(scansRef, scanResult, date, time, selectedSubject);
+                                        checkInData(attendanceRootRef,date, time,scanResult, userName);
                                     }
                                 }
-
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
                                 }
                             });
 
-                        userRes.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                                    nameModel = childSnapshot.getValue().toString();
-                                    list2.add(nameModel);
-                                }
-                                if (!list2.contains(scanResult)) {
-                                    userRes.child("student_name").setValue(scanResult);
-                                    suggestionRef.push().setValue(scanResult);
-                                }
-                            }
-                                @Override
-                                public void onCancelled (@NonNull DatabaseError error){   }
-                        });
+
                 });
         builder.show();
     });
@@ -175,6 +207,20 @@ public class ScanFragment extends Fragment {
     }
 
 
+    public void switchBtnIfAndElse(DatabaseReference databaseReference, String date, String check_in, String uid, String name){
+        if(switchState){
+            checkOutData(databaseReference, time);
+        }else{
+            checkInData(databaseReference, date, check_in, uid, name);
+        }
+    }
+    public void changeSwitchText(){
+        if (switchState) {
+            switchCheckInAndOut.setText("CHECK OUT");
+        } else {
+            switchCheckInAndOut.setText("CHECK IN");
+        }
+    }
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -196,10 +242,11 @@ public class ScanFragment extends Fragment {
             subjectList.add(value);
         }
     }
-    public void checkInData(DatabaseReference databaseReferenceRef, String date, String check_in){
+    public void checkInData(DatabaseReference databaseReferenceRef, String date, String check_in, String uid, String name){
         databaseReferenceRef.child("Date").setValue(date);
         databaseReferenceRef.child("Check_In").setValue(check_in);
-
+        databaseReferenceRef.child("UID").setValue(uid);
+        databaseReferenceRef.child("Name").setValue(name);
     }
 
     public void checkOutData(DatabaseReference databaseReferenceRef, String time){

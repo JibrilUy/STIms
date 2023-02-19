@@ -41,9 +41,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.check_out.setText(model.getCheck_out());
         holder.name.setText(model.getName());
         holder.date.setText(model.getDate());
-        holder.subject.setText(model.getSubject());
-        holder.violation.setText(model.getViolation());
-
     }
 
     @Override
@@ -54,7 +51,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder{
 
 
-        TextView check_in, check_out, name, date, subject, violation;
+        TextView check_in, check_out, name, date;
         public MyViewHolder(@NonNull View itemView){
             super(itemView);
 
@@ -62,8 +59,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             check_out = itemView.findViewById(R.id.text_view_check_out);
             name = itemView.findViewById(R.id.text_view_name);
             date = itemView.findViewById(R.id.text_view_date);
-            subject = itemView.findViewById(R.id.text_view_subject);
-            violation = itemView.findViewById(R.id.text_view_violation);
         }
     }
 }

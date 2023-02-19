@@ -119,7 +119,7 @@ public class StatFragment extends Fragment {
             String dateRef = sdf.format(new Date(date));
 
 
-            DatabaseReference datePickerRef = attendanceRef.child(selectedSubject).child(selectedSubject);
+            DatabaseReference datePickerRef = attendanceRef.child(selectedSubject).child(dateRef);
 
             datePickerRef.addValueEventListener(new ValueEventListener() {
                 @Override

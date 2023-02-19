@@ -7,8 +7,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.example.stims_v9.Adapters.MyAdapter2;
+import com.example.stims_v9.Adapters.spinnerAdapter;
 import com.example.stims_v9.Model.Model2;
 import com.example.stims_v9.R;
 import com.google.android.material.button.MaterialButton;
@@ -22,20 +27,35 @@ import java.util.ArrayList;
 
 public class StudentList extends AppCompatActivity {
 
+
+    MyAdapter2 adapter2;
+
+    ArrayList<Model2> list2;
+
+    MaterialButton btn_refresh, btn_exit;
+
+    Spinner spinnerStudentListSubjects;
+    RecyclerView recyclerView2;
+
+    ArrayList <String> subjectList = new ArrayList<>();
+
+    String selectedSubject;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_list);
 
-        //Initiating Firebase Database
-        DatabaseReference studentNameDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                .getReference("Users");
+        DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
 
-        MyAdapter2 adapter2;
+        DatabaseReference everySubjectRef = root.child("Subjects");
 
-        ArrayList<Model2> list2;
 
-        RecyclerView recyclerView2 = findViewById(R.id.recycler_view_2);
+
+        recyclerView2 = findViewById(R.id.recycler_view_2);
 
         recyclerView2.setHasFixedSize(true);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
@@ -44,15 +64,37 @@ public class StudentList extends AppCompatActivity {
 
         adapter2 = new MyAdapter2(this, list2);
 
-        MaterialButton btn_refresh, btn_exit;
+        spinnerStudentListSubjects = findViewById(R.id.spinnerStudentListSubjects);
+
+
+
+        everySubjectRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                updateSubjectSpinner(dataSnapshot);
+                spinnerAdapter subjectAdapter = new spinnerAdapter(getApplicationContext(), subjectList);
+                    spinnerStudentListSubjects.setAdapter(subjectAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {   }});
+
+        spinnerStudentListSubjects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedSubject = spinnerStudentListSubjects.getSelectedItem().toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }});
+
 
         btn_refresh = findViewById(R.id.btn_refresh);
         btn_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                DatabaseReference everyStudentRef = root.child("Students").child(selectedSubject);
 
-                studentNameDatabase.addValueEventListener(new ValueEventListener() {
+                everyStudentRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list2.clear();
@@ -64,9 +106,7 @@ public class StudentList extends AppCompatActivity {
 
                     }
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
+                    public void onCancelled(@NonNull DatabaseError error) {  }
                 });
             }
         });
@@ -79,11 +119,16 @@ public class StudentList extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
-
     }
+
+    public void updateSubjectSpinner(DataSnapshot dataSnapshot) {
+        subjectList.clear();
+        for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+            String value = childSnapshot.getValue(String.class);
+            subjectList.add(value);
+        }
+    }
+
+
+
 }

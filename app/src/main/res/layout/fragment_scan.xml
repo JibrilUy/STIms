@@ -35,7 +35,14 @@
             >
 
 
-            <LinearLayout
+                <Switch
+                    android:id="@+id/switchCheckInAndOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/check_in" />
+
+                <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -106,7 +113,9 @@
             android:backgroundTint="@color/grey3"
             android:text="@string/string_btn_scan"
             android:textColor="@color/white" />
+
             </LinearLayout>
+
         </LinearLayout>
 
     </FrameLayout>

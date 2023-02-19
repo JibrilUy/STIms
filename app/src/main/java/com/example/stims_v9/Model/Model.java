@@ -1,15 +1,8 @@
 package com.example.stims_v9.Model;
 
 public class Model {
-    String Check_In , Check_Out, Name, Date, Subject, Violation;
+    String Check_In , Check_Out, Name, Date;
 
-    public String getViolation() {
-        return Violation;
-    }
-
-    public String getSubject() {
-        return Subject;
-    }
 
     public String getCheck_in() {
         return Check_In;
