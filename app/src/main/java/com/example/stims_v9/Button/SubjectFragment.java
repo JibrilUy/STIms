@@ -34,19 +34,19 @@ public class SubjectFragment extends Fragment {
     private final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
     DatabaseReference root = studentDatabase.getReference();
     DatabaseReference subjectsRef = studentDatabase.getReference("Subjects");
-    DatabaseReference violationsRef = studentDatabase.getReference("Violations");
+    DatabaseReference sectionsRef = root.child("Sections");
 
     ScanFragment scanFragment;
     TextViewUpdater textViewUpdater;
 
-    EditText edit_text_subject_add, edit_text_violations_add;
-    MaterialButton btn_add_subjects, btn_add_violation, btn_delete_subjects, btn_delete_violations,btn_exit_subject;
-    Spinner spinner_subjects, spinner_violations;
+    EditText edit_text_subject_add, editTextSubjectAddSection;
+    MaterialButton btn_add_subjects, btnSubjectAddSection, btn_delete_subjects, btnSubjectDeleteSection,btn_exit_subject;
+    Spinner spinner_subjects, spinnerSubjectSections;
 
     ArrayList <String> subjectList = new ArrayList<>();
     ArrayList <String> violationList = new ArrayList<>();
 
-    String selectedSubject, selectedViolation;
+    String selectedSubject, selectedSections;
 
 
 
@@ -62,13 +62,13 @@ public class SubjectFragment extends Fragment {
         scanFragment = (ScanFragment) getParentFragment();
 
         edit_text_subject_add = v.findViewById(R.id.edit_text_subject_add);
-        edit_text_violations_add = v.findViewById(R.id.edit_text_violation_add);
+        editTextSubjectAddSection = v.findViewById(R.id.editTextSubjectAddSection);
 
         btn_exit_subject = v.findViewById(R.id.btn_exit_subject);
         btn_add_subjects = v.findViewById(R.id.btn_add_subjects);
-        btn_add_violation = v.findViewById(R.id.btn_add_violations);
+        btnSubjectAddSection = v.findViewById(R.id.btnSubjectAddSection);
         btn_delete_subjects = v.findViewById(R.id.btn_delete_subjects);
-        btn_delete_violations = v.findViewById(R.id.btn_delete_violations);
+        btnSubjectDeleteSection = v.findViewById(R.id.btnSubjectDeleteSection);
 
 
         btn_exit_subject.setOnClickListener(new View.OnClickListener() {
@@ -83,10 +83,10 @@ public class SubjectFragment extends Fragment {
                 addSubject(edit_text_subject_add);
             }
         });
-        btn_add_violation.setOnClickListener(new View.OnClickListener() {
+        btnSubjectAddSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addViolation(edit_text_violations_add);
+                addSection(editTextSubjectAddSection);
             }
         });
         btn_delete_subjects.setOnClickListener(new View.OnClickListener() {
@@ -95,15 +95,15 @@ public class SubjectFragment extends Fragment {
                 deleteSubject(edit_text_subject_add);
             }
         });
-        btn_delete_violations.setOnClickListener(new View.OnClickListener() {
+        btnSubjectDeleteSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteViolation(edit_text_violations_add);
+                deleteSection(editTextSubjectAddSection);
             }
         });
 
         spinner_subjects = v.findViewById(R.id.spinner_subjects);
-        spinner_violations = v.findViewById(R.id.spinner_violations);
+        spinnerSubjectSections = v.findViewById(R.id.spinnerSubjectSections);
 
 
 
@@ -130,14 +130,14 @@ public class SubjectFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }});
 
-        violationsRef.addValueEventListener(new ValueEventListener() {
+        sectionsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 updateViolationSpinner(dataSnapshot);
 
                 if(isAdded()) {
                 ArrayAdapter<String> violationAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, violationList);
-                spinner_violations.setAdapter(violationAdapter);
+                spinnerSubjectSections.setAdapter(violationAdapter);
                 }
 
             }
@@ -145,11 +145,11 @@ public class SubjectFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {   }
         });
 
-        spinner_violations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerSubjectSections.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedViolation = spinner_violations.getSelectedItem().toString();
-                edit_text_violations_add.setText(selectedViolation);
+                selectedSections = spinnerSubjectSections.getSelectedItem().toString();
+                editTextSubjectAddSection.setText(selectedSections);
             }
 
             @Override
@@ -169,13 +169,13 @@ public class SubjectFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
-    public void addViolation(EditText editText) {
-        String violationsToAdd = editText.getText().toString();
-        if(!violationsToAdd.isEmpty()) {
-            violationsRef.child(violationsToAdd).setValue(violationsToAdd).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Violation Added",
+    public void addSection(EditText editText) {
+        String sectionToAdd = editText.getText().toString();
+        if(!sectionToAdd.isEmpty()) {
+            sectionsRef.child(sectionToAdd).setValue(sectionToAdd).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Section Added",
                     Toast.LENGTH_SHORT).show());
         } else {
-            Toast.makeText(getActivity(), "Please Enter Violation", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please Enter Section", Toast.LENGTH_SHORT).show();
         }
     }
     public void addSubject(EditText editText) {
@@ -195,11 +195,10 @@ public class SubjectFragment extends Fragment {
         selectedSubjectsRef.removeValue().addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Subject Deleted",
                 Toast.LENGTH_SHORT).show());
     }
-    public void deleteViolation(EditText editText) {
-        String violationToDelete = editText.getText().toString();
-        DatabaseReference violationsRootRef = root.child("Violations");
-        DatabaseReference selectedViolationRef = violationsRootRef.child(violationToDelete);
-        selectedViolationRef.removeValue().addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Violation Deleted",
+    public void deleteSection(EditText editText) {
+        String sectionToDelete = editText.getText().toString();
+        DatabaseReference selectedSectionRef = sectionsRef.child(sectionToDelete);
+        selectedSectionRef.removeValue().addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Section Removed",
                 Toast.LENGTH_SHORT).show());
     }
 

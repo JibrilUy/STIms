@@ -110,17 +110,17 @@
                     android:orientation="horizontal">
 
                     <Spinner
-                        android:id="@+id/spinner_violations"
+                        android:id="@+id/spinnerSubjectSections"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent" />
 
                     <EditText
-                        android:id="@+id/edit_text_violation_add"
+                        android:id="@+id/editTextSubjectAddSection"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:maxLength="20"
-                        android:hint="Enter Violations" />
+                        android:hint="Enter Section" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -130,13 +130,13 @@
 
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_delete_violations"
+                        android:id="@+id/btnSubjectDeleteSection"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        android:text="Delete Violation"
+                        android:text="Remove Section"
                         android:textColor="@color/white"
                         app:strokeColor="@color/grey"
                         app:strokeWidth="3dp"
@@ -144,12 +144,12 @@
                         />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_add_violations"
+                        android:id="@+id/btnSubjectAddSection"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="16dp"
                         android:backgroundTint="@color/white"
-                        android:text="Add Violation"
+                        android:text="Add Section"
                         android:textColor="@color/grey"
 
                         />

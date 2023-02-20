@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -17,28 +18,39 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.stims_v9.Adapters.spinnerAdapter;
 import com.example.stims_v9.Login.Register;
 import com.example.stims_v9.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 
 public class EditProfile extends Fragment {
 
     private static final int PICK_IMAGE_REQUEST_CODE = 11;
+
+    DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+
+    DatabaseReference everySectionRef = root.child("Sections");
 
     FirebaseUser currentUser;
     FirebaseAuth mAuth;
@@ -48,13 +60,18 @@ public class EditProfile extends Fragment {
     EditText editTextProfileName, editTextProfileStudentNumber, editTextProfileSection, editTextProfileParentEmail, editTextProfileQuote;
 
     Button btnAddUserData, btnProfileEditExit;
+    ArrayList<String> sectionList = new ArrayList<>();
+
+    ArrayList<String> everyStudent = new ArrayList<>();
+
+
 
     ImageView imageViewEditProfilePic;
+    
+    Spinner spinnerEditProfileFragSection;
 
-    String userEmail, userName, userStudentNumber, userSection, userParentEmail, userQuote;
+    String userEmail, userName, userStudentNumber, userSection, userParentEmail, userQuote, selectedSection, userId;
 
-    final FirebaseDatabase studentDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/");
-    DatabaseReference root = studentDatabase.getReference();
 
 
 
@@ -71,17 +88,20 @@ public class EditProfile extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+        userId = mAuth.getUid();
 
         editTextProfileName = v.findViewById(R.id.editTextProfileName);
         editTextProfileStudentNumber = v.findViewById(R.id.editTextProfileStudentNumber);
-        editTextProfileSection = v.findViewById(R.id.editTextProfileSection);
         editTextProfileParentEmail = v.findViewById(R.id.editTextProfileParentEmail);
         editTextProfileQuote = v.findViewById(R.id.editTextProfileQuote);
 
         imageViewEditProfilePic = v.findViewById(R.id.imageViewEditProfilePic);
+        spinnerEditProfileFragSection = v.findViewById(R.id.spinnerEditProfileFragSection);
 
         btnAddUserData = v.findViewById(R.id.btnAddUserData);
         btnProfileEditExit = v.findViewById(R.id.btnProfileEditExit);
+
+        updateSectionSpinner();
 
         imageViewEditProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,7 +114,8 @@ public class EditProfile extends Fragment {
             @Override
             public void onClick(View view) {
                 addUserData();
-                if(imageUri == null) {
+                addNameToDatabase();
+                if(imageUri != null) {
                     saveImageUriToSharedPreferences(imageUri);
                     saveImageToInternalStorage(imageUri);
                 }
@@ -107,6 +128,9 @@ public class EditProfile extends Fragment {
                 openProfileActivity();
             }
         });
+
+
+        
 
 
 
@@ -147,7 +171,7 @@ public class EditProfile extends Fragment {
         userEmail = currentUser.getEmail();
         userName = getTextOutOfEditText(editTextProfileName);
         userStudentNumber = getTextOutOfEditText(editTextProfileStudentNumber);
-        userSection = getTextOutOfEditText(editTextProfileSection);
+        userSection = selectedSection;
         userParentEmail = getTextOutOfEditText(editTextProfileParentEmail);
         userQuote = getTextOutOfEditText(editTextProfileQuote);
 
@@ -231,6 +255,67 @@ public class EditProfile extends Fragment {
             e.printStackTrace();
         }
     }
+
+
+    public void updateSectionList(DataSnapshot dataSnapshot) {
+        sectionList.clear();
+        for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+            String value = childSnapshot.getValue(String.class);
+            sectionList.add(value);
+        }
+    }
+    public void updateSectionSpinner(){
+        everySectionRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                updateSectionList(dataSnapshot);
+                spinnerAdapter sectionAdapter = new spinnerAdapter(getActivity(), sectionList);
+                spinnerEditProfileFragSection.setAdapter(sectionAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {   }});
+        spinnerEditProfileFragSection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedSection = spinnerEditProfileFragSection.getSelectedItem().toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }});
+    }
+
+    public void addNameToDatabase(){
+        DatabaseReference userDataRef = root.child("UserData").child(userId);
+        userDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userName = dataSnapshot.child("name").getValue(String.class);
+            }
+            @Override
+            public void onCancelled (@NonNull DatabaseError error){   }});
+
+        DatabaseReference everyStudentRef = root.child("Students").child(selectedSection);
+        everyStudentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                everyStudent.clear();
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    String nameModel = childSnapshot.getValue().toString();
+                    everyStudent.add(nameModel);
+                }
+                if(!everyStudent.contains(userName)){
+                    String name = userName;
+                    everyStudentRef.child(name).child("student_name").setValue(name);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {  }
+        });
+
+    }
+
+
+
+
 
 
 

@@ -27,6 +27,10 @@ import java.util.ArrayList;
 
 public class StudentList extends AppCompatActivity {
 
+    DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+
+    DatabaseReference everySubjectRef = root.child("Subjects");
+    DatabaseReference everySectionRef = root.child("Sections");
 
     MyAdapter2 adapter2;
 
@@ -34,12 +38,14 @@ public class StudentList extends AppCompatActivity {
 
     MaterialButton btn_refresh, btn_exit;
 
-    Spinner spinnerStudentListSubjects;
+    Spinner spinnerStudentListSubjects, spinnerStudentListActivitySection;
     RecyclerView recyclerView2;
 
     ArrayList <String> subjectList = new ArrayList<>();
+    ArrayList <String> sectionList = new ArrayList<>();
 
-    String selectedSubject;
+
+    String selectedSection;
 
 
 
@@ -49,9 +55,7 @@ public class StudentList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_list);
 
-        DatabaseReference root = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
 
-        DatabaseReference everySubjectRef = root.child("Subjects");
 
 
 
@@ -64,27 +68,10 @@ public class StudentList extends AppCompatActivity {
 
         adapter2 = new MyAdapter2(this, list2);
 
-        spinnerStudentListSubjects = findViewById(R.id.spinnerStudentListSubjects);
+        spinnerStudentListActivitySection = findViewById(R.id.spinnerStudentListActivitySection);
 
 
-
-        everySubjectRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                updateSubjectSpinner(dataSnapshot);
-                spinnerAdapter subjectAdapter = new spinnerAdapter(getApplicationContext(), subjectList);
-                    spinnerStudentListSubjects.setAdapter(subjectAdapter);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {   }});
-
-        spinnerStudentListSubjects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedSubject = spinnerStudentListSubjects.getSelectedItem().toString();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }});
+        updateSectionSpinner();
 
 
         btn_refresh = findViewById(R.id.btn_refresh);
@@ -92,7 +79,7 @@ public class StudentList extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                DatabaseReference everyStudentRef = root.child("Students").child(selectedSubject);
+                DatabaseReference everyStudentRef = root.child("Students").child(selectedSection);
                 everyStudentRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -119,12 +106,30 @@ public class StudentList extends AppCompatActivity {
 
     }
 
-    public void updateSubjectSpinner(DataSnapshot dataSnapshot) {
-        subjectList.clear();
+    public void updateSectionList(DataSnapshot dataSnapshot) {
+        sectionList.clear();
         for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
             String value = childSnapshot.getValue(String.class);
-            subjectList.add(value);
+            sectionList.add(value);
         }
+    }
+    public void updateSectionSpinner(){
+        everySectionRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                updateSectionList(dataSnapshot);
+                spinnerAdapter sectionAdapter = new spinnerAdapter(getApplicationContext(), sectionList);
+                spinnerStudentListActivitySection.setAdapter(sectionAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {   }});
+        spinnerStudentListActivitySection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedSection = spinnerStudentListActivitySection.getSelectedItem().toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }});
     }
 
 

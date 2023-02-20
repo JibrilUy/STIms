@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.stims_v9.Model.Model2;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,7 +50,7 @@ public class QRFragment extends Fragment {
     EditText etQR;
     Button btnGenerateQR, btnSaveQR;
     ImageView imgQR;
-    String bitmap_name, userId, userName, name;
+    String bitmap_name, userId, userName;
 
     Bitmap bitmap;
 
@@ -86,7 +87,6 @@ public class QRFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
 
-                        name = userName;
                             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 
                             try {
@@ -116,10 +116,12 @@ public class QRFragment extends Fragment {
         OutputStream fos;
 
         try{
+            String name = userName;
+
             ContentResolver resolver = getActivity().getContentResolver();
 
             ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME,"STIms_QR_Generated_" + "something" + ".jpg");
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME,"STIms_QR_Generated_" + name + ".jpg");
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE,"Image/jpg");
             Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
 
@@ -130,4 +132,11 @@ public class QRFragment extends Fragment {
             Log.d("error", e.toString());
         }
     }
+
+
+
+
+
+
 }
+

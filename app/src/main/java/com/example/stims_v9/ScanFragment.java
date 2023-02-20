@@ -46,15 +46,18 @@ public class ScanFragment extends Fragment {
     //Initialize variable
     String date = new SimpleDateFormat("yyyy, MMMM, d,EEEE", Locale.getDefault()).format(new Date());
     String time = new SimpleDateFormat("h:mm:a", Locale.getDefault()).format(new Date());
-    String nameModel, selectedSubject, userId, userName;
+    String nameModel, selectedSubject,selectedSection, userId, userName;
     Button btn_scan ;
     MaterialButton btn_subjects;
-    Spinner spinner_subjects;
+    Spinner spinner_subjects, spinnerScanFragSection;
     Switch switchCheckInAndOut;
-    TextView text_view_subject_selected;
+    TextView text_view_subject_selected, textViewScanFragSectionSelected;
 
     ArrayList<String> everyStudent = new ArrayList<>();
     ArrayList <String> subjectList = new ArrayList<>();
+
+    ArrayList <String> sectionList = new ArrayList<>();
+
 
     FirebaseAuth mAuth;
     FirebaseUser currentUser;
@@ -65,6 +68,8 @@ public class ScanFragment extends Fragment {
     private final DatabaseReference root = studentDatabase.getReference();
 
     DatabaseReference everySubjectRef = root.child("Subjects");
+    DatabaseReference everySectionRef = root.child("Sections");
+
 
 
     @Override
@@ -84,6 +89,7 @@ public class ScanFragment extends Fragment {
         text_view_subject_selected = v.findViewById(R.id.text_view_subject_selected);
 
         spinner_subjects = v.findViewById(R.id.spinner_subjects);
+        spinnerScanFragSection = v.findViewById(R.id.spinnerScanFragSection);
 
         btn_subjects = v.findViewById(R.id.btn_subjects);
         btn_scan = v.findViewById(R.id.btn_scan);
@@ -101,7 +107,7 @@ public class ScanFragment extends Fragment {
             }
         });
 
-        everySubjectRef.addValueEventListener(new ValueEventListener() {
+        everySubjectRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 updateSubjectSpinner(dataSnapshot);
@@ -121,6 +127,28 @@ public class ScanFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }});
 
+        everySectionRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                updateSectionSpinner(dataSnapshot);
+                if(isAdded()) {
+                    ArrayAdapter<String> sectionAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, sectionList);
+                    spinnerScanFragSection.setAdapter(sectionAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {  }
+        });
+
+        spinnerScanFragSection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedSection = spinnerScanFragSection.getSelectedItem().toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }});
+
 
 
         final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
@@ -129,17 +157,19 @@ public class ScanFragment extends Fragment {
                     String scanResult = result.getContents();
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("Student Name");
-                    builder.setMessage("Selected Subject: "+ selectedSubject );
+                    builder.setMessage("Selected Section: " + selectedSection + "\n" + "Selected Subject: "+ selectedSubject);
                     builder.setPositiveButton("CANCEL", (dialogInterface, i) -> {
                         Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
                         dialogInterface.dismiss();
                     });
                     builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
 
+                        checkStudentInAndOut(scanResult);
+
 
                         DatabaseReference suggestionRef = root.child("Suggestions");
+                        suggestionRef.push().setValue(scanResult);
 
-                        DatabaseReference everyStudentRef = root.child("Students").child(selectedSubject);
 
                         DatabaseReference userDataRef = root.child("UserData").child(scanResult);
                         userDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -150,40 +180,9 @@ public class ScanFragment extends Fragment {
                             @Override
                             public void onCancelled (@NonNull DatabaseError error){   }});
 
-                        everyStudentRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                everyStudent.clear();
-                                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                                    nameModel = childSnapshot.getValue().toString();
-                                    everyStudent.add(nameModel);
-                                }
-                                if(!everyStudent.contains(userName)){
-                                    String name = userName;
-                                    everyStudentRef.push().child("student_name").setValue(name);
-                                    suggestionRef.push().setValue(scanResult);
-                                }
-
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {  }
-                        });
 
 
-                        DatabaseReference attendanceRootRef = root.child("Attendance").child(selectedSubject).child(date).child(scanResult);
-                        attendanceRootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.child("Check_In").exists()) {
-                                        checkOutData(attendanceRootRef, time);
-                                    } else {
-                                        checkInData(attendanceRootRef,date, time,scanResult, userName);
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                }
-                            });
+
 
 
                 });
@@ -242,6 +241,15 @@ public class ScanFragment extends Fragment {
             subjectList.add(value);
         }
     }
+
+    public void updateSectionSpinner(DataSnapshot dataSnapshot) {
+        sectionList.clear();
+        for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+            String value = childSnapshot.getValue(String.class);
+            sectionList.add(value);
+        }
+    }
+
     public void checkInData(DatabaseReference databaseReferenceRef, String date, String check_in, String uid, String name){
         databaseReferenceRef.child("Date").setValue(date);
         databaseReferenceRef.child("Check_In").setValue(check_in);
@@ -260,6 +268,25 @@ public class ScanFragment extends Fragment {
         options.setOrientationLocked(true);
         options.setCaptureActivity(Capture.class);
     }
+
+    public void checkStudentInAndOut(String scanResult){
+        DatabaseReference attendanceRootRef = root.child("Attendance").child(selectedSection).child(selectedSubject).child(date).child(scanResult);
+        attendanceRootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child("Check_In").exists()) {
+                    checkOutData(attendanceRootRef, time);
+                } else {
+                    checkInData(attendanceRootRef,date, time,scanResult, userName);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {  }
+        });
+    }
+
+
+
 }
 
 

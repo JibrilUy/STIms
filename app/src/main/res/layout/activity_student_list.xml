@@ -7,21 +7,32 @@
     android:orientation="vertical"
     android:background="@color/sti_grey"
     tools:context=".Button.StudentList">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        android:gravity="end|center">
+
+        <Spinner
+            android:id="@+id/spinnerStudentListActivitySection"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginEnd="15dp"
+            android:gravity="center"
+            />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="end|center"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
 
 
-
-        <Spinner
-            android:id="@+id/spinnerStudentListSubjects"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_refresh"

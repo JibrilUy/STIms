@@ -51,16 +51,23 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:gravity="end">
+        <Spinner
+            android:id="@+id/spinnerStatFragSection"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginEnd="15dp"
+            android:gravity="center"
+            />
 
-    <Spinner
-        android:id="@+id/spinner_subject_stat_fragment"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_marginEnd="15dp"
-
-        />
+        <Spinner
+            android:id="@+id/spinner_subject_stat_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginEnd="15dp"
+            android:gravity="center"
+            />
     </LinearLayout>
 
 </LinearLayout>

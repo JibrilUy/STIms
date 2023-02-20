@@ -25,6 +25,26 @@
             android:src="@mipmap/stims_launcher_round"
             tools:srcCompat="@tools:sample/avatars" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="40dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Your Current Section: "/>
+
+            <Spinner
+                android:id="@+id/spinnerEditProfileFragSection"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                />
+        </LinearLayout>
+
     <EditText
         android:id="@+id/editTextProfileName"
         android:layout_width="match_parent"
@@ -53,19 +73,8 @@
         android:textColor="@color/sti_white"
         android:textColorHint="@color/sti_white" />
 
-    <EditText
-        android:id="@+id/editTextProfileSection"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="40dp"
-        android:hint="Enter Section"
-        android:inputType="text"
-        android:minHeight="48dp"
-        android:maxLength="50"
-        android:textColor="@color/sti_white"
-        android:textColorHint="@color/sti_white" />
+
+
 
         <EditText
             android:id="@+id/editTextProfileParentEmail"

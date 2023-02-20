@@ -50,14 +50,17 @@ public class StatFragment extends Fragment {
     private final DatabaseReference attendanceRef = root.child("Attendance");
 
     private final DatabaseReference everySubjectsRef = root.child("Subjects");
+    private final DatabaseReference everySectionsRef = root.child("Sections");
 
-    Spinner spinner_subject_stat_fragment;
+    Spinner spinner_subject_stat_fragment, spinnerStatFragSection;
 
     private MyAdapter adapter;
     private ArrayList<Model> list;
     ArrayList<String> subjectList;
+    ArrayList<String> sectionList;
 
-    String selectedSubject;
+
+    String selectedSubject, selectedSection;
 
     MaterialButton btnStatFragEveryStudent, btnCalendarView;
     SearchView search_view;
@@ -71,6 +74,7 @@ public class StatFragment extends Fragment {
     View v = inflater.inflate(R.layout.fragment_stat, container, false);
 
     spinner_subject_stat_fragment = v.findViewById(R.id.spinner_subject_stat_fragment);
+    spinnerStatFragSection = v.findViewById(R.id.spinnerStatFragSection);
 
     calendarView = v.findViewById(R.id.calendarView);
     recyclerView = v.findViewById(R.id.recycler_view_);
@@ -83,6 +87,7 @@ public class StatFragment extends Fragment {
     list = new ArrayList<>();
     adapter = new MyAdapter(getActivity(), list);
     subjectList = new ArrayList<>();
+    sectionList = new ArrayList<>();
 
     calendarView.setVisibility(View.GONE);
     recyclerView.setHasFixedSize(true);
@@ -103,7 +108,8 @@ public class StatFragment extends Fragment {
         }
     });
 
-    updateSubjectList();
+    updateSubjectSpinner();
+    updateSectionSpinner();
 
 
 
@@ -119,7 +125,7 @@ public class StatFragment extends Fragment {
             String dateRef = sdf.format(new Date(date));
 
 
-            DatabaseReference datePickerRef = attendanceRef.child(selectedSubject).child(dateRef);
+            DatabaseReference datePickerRef = attendanceRef.child(selectedSection).child(selectedSubject).child(dateRef);
 
             datePickerRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -233,8 +239,8 @@ public class StatFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void updateSubjectList() {
-        everySubjectsRef.addValueEventListener(new ValueEventListener() {
+    private void updateSubjectSpinner() {
+        everySubjectsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 subjectList.clear();
@@ -251,7 +257,6 @@ public class StatFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {   }
         });
-
         spinner_subject_stat_fragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -260,6 +265,33 @@ public class StatFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {   } });
 
+    }
+
+    private void updateSectionSpinner() {
+        everySectionsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                sectionList.clear();
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    String value = childSnapshot.getValue(String.class);
+                    sectionList.add(value);
+                }
+                adapter.notifyDataSetChanged();
+                if(isAdded()) {
+                    ArrayAdapter<String> sectionAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, sectionList);
+                    spinnerStatFragSection.setAdapter(sectionAdapter);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {   }
+        });
+        spinnerStatFragSection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedSection = spinnerStatFragSection.getSelectedItem().toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {   } });
     }
 
 
