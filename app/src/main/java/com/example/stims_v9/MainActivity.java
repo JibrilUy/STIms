@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.stims_v9.Login.Register;
 import com.example.stims_v9.Login.SignIn;
 import com.example.stims_v9.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         currentUser = mAuth.getCurrentUser();
+        if(currentUser == null){
+            openSignInActivity();
+        }
         savedImageUri = getImageUriFromSharedPreferences();
     }
 
@@ -111,6 +115,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
+    public void openRegisterActivity(){
+        Intent intent = new Intent (getApplicationContext(), Register.class);
+        startActivity(intent);
+        finish();
+    }
+
 
     public void openProfileActivity(){
         Intent intent = new Intent (getApplicationContext(), com.example.stims_v9.Button.ProfileActivity.class);

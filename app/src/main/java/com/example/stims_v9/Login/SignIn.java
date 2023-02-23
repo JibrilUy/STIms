@@ -36,7 +36,9 @@ public class SignIn extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         currentUser = mAuth.getCurrentUser();
-        openMainActivityStart();
+        if(currentUser != null){
+            openMainActivity();
+        }
     }
 
     @Override
@@ -88,13 +90,7 @@ public class SignIn extends AppCompatActivity {
         finish();
     }
 
-    public void openMainActivityStart(){
-        if(currentUser != null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
+
     public void openMainActivity(){
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
