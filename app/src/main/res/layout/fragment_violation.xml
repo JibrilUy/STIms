@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Button.ViolationFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        >
+
+
+        <LinearLayout
+            android:id="@+id/linear_layout_menu_whole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grey3"
+            android:orientation="vertical">
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="15dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/spinnerViolations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                    <EditText
+                        android:id="@+id/editTextAddDescriptionViolationFrag"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:maxLength="60"
+                        android:hint="Enter Description (Optional)" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnExitViolationFragment"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:text="Cancel"
+                        android:textColor="@color/white"
+                        app:strokeColor="@color/grey"
+                        app:strokeWidth="3dp"
+
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAddViolationViolationFragment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:backgroundTint="@color/white"
+                        android:text="Add Violation"
+                        android:textColor="@color/grey"
+
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

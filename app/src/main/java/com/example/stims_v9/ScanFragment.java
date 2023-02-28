@@ -1,7 +1,7 @@
 package com.example.stims_v9;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -22,9 +21,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.stims_v9.Adapters.SharedViewModel;
 import com.example.stims_v9.Button.Capture;
 import com.example.stims_v9.Button.SubjectFragment;
+import com.example.stims_v9.Button.ViolationFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,9 +48,9 @@ public class ScanFragment extends Fragment {
     //Initialize variable
     String date = new SimpleDateFormat("yyyy, MMMM, d,EEEE", Locale.getDefault()).format(new Date());
     String time = new SimpleDateFormat("h:mm:a", Locale.getDefault()).format(new Date());
-    String nameModel, selectedSubject,selectedSection, userId, userName;
+    String nameModel, selectedSubject,selectedSection, userId, userName, userViolation;
     Button btn_scan ;
-    MaterialButton btn_subjects;
+    MaterialButton btn_subjects, btnAddViolationScanFrag;
     Spinner spinner_subjects, spinnerScanFragSection;
     Switch switchCheckInAndOut;
     TextView text_view_subject_selected, textViewScanFragSectionSelected;
@@ -57,6 +59,8 @@ public class ScanFragment extends Fragment {
     ArrayList <String> subjectList = new ArrayList<>();
 
     ArrayList <String> sectionList = new ArrayList<>();
+
+    SharedViewModel viewModel;
 
 
     FirebaseAuth mAuth;
@@ -85,8 +89,10 @@ public class ScanFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_scan, container, false);
 
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         text_view_subject_selected = v.findViewById(R.id.text_view_subject_selected);
+        textViewScanFragSectionSelected = v.findViewById(R.id.textViewScanFragSectionSelected);
 
         spinner_subjects = v.findViewById(R.id.spinner_subjects);
         spinnerScanFragSection = v.findViewById(R.id.spinnerScanFragSection);
@@ -99,6 +105,8 @@ public class ScanFragment extends Fragment {
 
         switchCheckInAndOut = v.findViewById(R.id.switchCheckInAndOut);
         switchCheckInAndOut.setVisibility(View.GONE);
+
+
         switchCheckInAndOut.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -155,6 +163,11 @@ public class ScanFragment extends Fragment {
                 result -> {
                     result.getClass();
                     String scanResult = result.getContents();
+                    if(TextUtils.isEmpty(scanResult)) {
+                        Toast.makeText(getActivity(), "NOTHING SCANNED", Toast.LENGTH_SHORT).show();
+                    }else{
+                        viewModel.setData(scanResult);
+                    }
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("Student Name");
                     builder.setMessage("Selected Section: " + selectedSection + "\n" + "Selected Subject: "+ selectedSubject);
@@ -162,28 +175,32 @@ public class ScanFragment extends Fragment {
                         Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
                         dialogInterface.dismiss();
                     });
+
+                    builder.setNeutralButton("VIOLATION", (dialogInterface, i) -> {
+                        replaceFragment(new ViolationFragment());
+                        hideButtons();
+                        dialogInterface.dismiss();
+                    });
                     builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
 
-                        checkStudentInAndOut(scanResult);
+                        if(!TextUtils.isEmpty(scanResult)) {
+                            checkStudentInAndOut(scanResult);
 
 
-                        DatabaseReference suggestionRef = root.child("Suggestions");
-                        suggestionRef.push().setValue(scanResult);
+                            DatabaseReference suggestionRef = root.child("Suggestions");
+                            suggestionRef.push().setValue(scanResult);
 
-
-                        DatabaseReference userDataRef = root.child("UserData").child(scanResult);
-                        userDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                userName = dataSnapshot.child("name").getValue(String.class);
-                            }
-                            @Override
-                            public void onCancelled (@NonNull DatabaseError error){   }});
-
-
-
-
-
+                            DatabaseReference userDataRef = root.child("UserData").child(scanResult);
+                            userDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    userName = dataSnapshot.child("name").getValue(String.class);
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                        }
 
                 });
         builder.show();
@@ -198,7 +215,7 @@ public class ScanFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 replaceFragment(new SubjectFragment());
-                hideButtons(btn_scan, btn_subjects, spinner_subjects, text_view_subject_selected);
+                hideButtons();
             }
         });
 
@@ -227,11 +244,13 @@ public class ScanFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
-    public void hideButtons(View btnScan, View btnSubjects, View spinnerSubjects, View text_view_subject_selected) {
-        btnScan.setVisibility(View.GONE);
-        btnSubjects.setVisibility(View.GONE);
-        spinnerSubjects.setVisibility(View.GONE);
+    public void hideButtons() {
+        btn_scan.setVisibility(View.GONE);
+        btn_subjects.setVisibility(View.GONE);
+        spinnerScanFragSection.setVisibility(View.GONE);
+        spinner_subjects.setVisibility(View.GONE);
         text_view_subject_selected.setVisibility(View.GONE);
+        textViewScanFragSectionSelected.setVisibility(View.GONE);
     }
 
     public void updateSubjectSpinner(DataSnapshot dataSnapshot) {
