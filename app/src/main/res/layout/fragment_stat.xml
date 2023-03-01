@@ -6,6 +6,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".StatFragment"
     android:background="@color/sti_grey">
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
 
     <LinearLayout
         android:id="@+id/LinearLayout"
@@ -19,6 +28,7 @@
             android:id="@+id/calendarView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/rounder_corner_calendar_view"
             android:layout_gravity="center"/>
 
 
@@ -38,11 +48,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:gravity="end">
+        android:gravity="center|end"
+        >
+
+        <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCalendarView"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:text="HIDE CALENDAR"
+        app:iconTint="@color/sti_white" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStatFragEveryStudent"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/sti_blue"
+            app:icon="@drawable/ic_baseline_people_outline_24"
+            app:iconTint="@color/sti_beige" />
 
 
 
-    />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCalendarViewHideCalendarStatFrag"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="30dp"
+            android:backgroundTint="@color/sti_blue"
+            app:icon="@drawable/ic_baseline_calendar_month_24"
+            app:iconTint="@color/sti_beige" />
+
     </LinearLayout>
 
 
@@ -77,47 +119,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
             android:gravity="end">
 
 
-        <androidx.appcompat.widget.SearchView
+            <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_view"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxWidth="270dp"
-                android:hint="Search"
-                android:iconifiedByDefault="true"
+                android:iconifiedByDefault="false"
+                app:iconifiedByDefault="false"
+                app:searchIcon="@null"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                app:defaultQueryHint="Search"
+                app:defaultQueryHint="Search Name"
                 android:textColorHint="@color/white"
-            />
+                />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnStatFragEveryStudent"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="55dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginEnd="5dp"
-                android:backgroundTint="@color/grey2"
-                android:textColorHint="@color/white"
-                app:icon="@drawable/ic_baseline_people_outline_24"
-                app:iconTint="@color/white" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCalendarView"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="55dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="15dp"
-                android:backgroundTint="@color/grey2"
-                app:icon="@drawable/ic_baseline_calendar_month_24"
-                app:iconTint="@color/white" />
 
         </LinearLayout>
 
@@ -132,6 +151,6 @@
     </LinearLayout>
 
 
-
+</FrameLayout>
 
 </FrameLayout>

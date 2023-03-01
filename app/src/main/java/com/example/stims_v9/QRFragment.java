@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.stims_v9.Model.Model2;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,7 +49,7 @@ public class QRFragment extends Fragment {
     private final DatabaseReference root = studentDatabase.getReference();
 
     EditText etQR;
-    Button btnGenerateQR, btnSaveQR;
+    MaterialButton btnGenerateQR, btnSaveQR;
     ImageView imgQR;
     String bitmap_name, userId, userName;
 

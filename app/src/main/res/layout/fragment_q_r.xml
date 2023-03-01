@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".QRFragment"
     android:background="@color/sti_grey">
 
@@ -13,26 +14,29 @@
 
 
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnGenerateQR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/grey2"
+        android:backgroundTint="@color/sti_blue"
         android:hint="GENERATE QR"
         android:layout_marginTop="120dp"
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/sti_yellow"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"/>
-    <Button
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSaveQR"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/grey2"
         android:hint="SAVE QR"
         android:layout_marginTop="10dp"
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/sti_beige"
         android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"/>
+        android:layout_marginEnd="40dp"
+        app:strokeColor="@color/sti_white"
+        app:strokeWidth="2dp"/>
 
 
     <ImageView

@@ -14,26 +14,16 @@
         android:gravity="center"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
+        android:layout_marginBottom="100dp"
         >
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_exit_subject"
-            android:layout_width="55dp"
-            android:layout_height="50dp"
-            android:layout_above="@id/linear_layout_menu_whole"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="7dp"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/grey"
 
-
-            app:icon="@drawable/ic_baseline_cancel_24" />
 
         <LinearLayout
             android:id="@+id/linear_layout_menu_whole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/grey3"
+            android:background="@color/sti_blue"
             android:orientation="vertical">
 
 
@@ -88,9 +78,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="16dp"
-                        android:backgroundTint="@color/grey"
+                        android:backgroundTint="@color/sti_beige"
                         android:text="Add Subject"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/sti_white" />
                 </LinearLayout>
 
 
@@ -149,12 +139,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="16dp"
-                        android:backgroundTint="@color/white"
+                        android:backgroundTint="@color/sti_beige"
                         android:text="Add Section"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/sti_white"
 
                         />
                 </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_exit_subject"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="CLOSE"
+                    android:textColor="@color/sti_white"
+                    app:strokeColor="@color/sti_grey"
+                    app:strokeWidth="2dp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    />
             </LinearLayout>
 
         </LinearLayout>

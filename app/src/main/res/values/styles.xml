@@ -4,7 +4,7 @@
         <!-- Customize your theme here -->
         <item name="colorPrimary">@color/sti_white</item>
         <item name="colorPrimaryDark">@color/sti_blue</item>
-        <item name="colorAccent">@color/sti_blue</item>
+        <item name="colorAccent">@color/sti_yellow</item>
 
         <item name="titleTextColor">@color/sti_beige</item>
         

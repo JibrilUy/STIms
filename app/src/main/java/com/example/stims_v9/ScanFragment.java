@@ -184,17 +184,14 @@ public class ScanFragment extends Fragment {
                     builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
 
                         if(!TextUtils.isEmpty(scanResult)) {
-                            checkStudentInAndOut(scanResult);
 
-
-                            DatabaseReference suggestionRef = root.child("Suggestions");
-                            suggestionRef.push().setValue(scanResult);
 
                             DatabaseReference userDataRef = root.child("UserData").child(scanResult);
                             userDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     userName = dataSnapshot.child("name").getValue(String.class);
+                                    checkStudentInAndOut(scanResult, userName);
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
@@ -288,7 +285,7 @@ public class ScanFragment extends Fragment {
         options.setCaptureActivity(Capture.class);
     }
 
-    public void checkStudentInAndOut(String scanResult){
+    public void checkStudentInAndOut(String scanResult, String name){
         DatabaseReference attendanceRootRef = root.child("Attendance").child(selectedSection).child(selectedSubject).child(date).child(scanResult);
         attendanceRootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -296,7 +293,7 @@ public class ScanFragment extends Fragment {
                 if (snapshot.child("Check_In").exists()) {
                     checkOutData(attendanceRootRef, time);
                 } else {
-                    checkInData(attendanceRootRef,date, time,scanResult, userName);
+                    checkInData(attendanceRootRef,date, time,scanResult, name);
                 }
             }
             @Override

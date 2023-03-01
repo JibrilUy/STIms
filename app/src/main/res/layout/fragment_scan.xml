@@ -101,11 +101,11 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
                 android:text="Edit"
-                android:textColor="@color/white"
+                android:textColor="@color/sti_beige"
                 app:icon="@drawable/ic_baseline_add_24"
-                app:iconTint="@color/white"
+                app:iconTint="@color/sti_beige"
                 app:strokeWidth="2dp"
-                app:strokeColor="@color/white"
+                app:strokeColor="@color/sti_blue"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 />
 
@@ -114,9 +114,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:backgroundTint="@color/grey3"
+            android:backgroundTint="@color/sti_blue"
             android:text="@string/string_btn_scan"
-            android:textColor="@color/white" />
+            android:textColor="@color/sti_yellow" />
 
             </LinearLayout>
 

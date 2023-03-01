@@ -293,6 +293,7 @@ public class EditProfile extends Fragment {
             @Override
             public void onCancelled (@NonNull DatabaseError error){   }});
 
+        DatabaseReference suggestionsRef = root.child("Suggestions");
         DatabaseReference everyStudentRef = root.child("Students").child(selectedSection);
         everyStudentRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -305,6 +306,8 @@ public class EditProfile extends Fragment {
                 if(!everyStudent.contains(userName)){
                     String name = userName;
                     everyStudentRef.child(name).child("student_name").setValue(name);
+                    suggestionsRef.push().setValue(name + "," + userId);
+
                 }
             }
             @Override

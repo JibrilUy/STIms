@@ -9,9 +9,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +28,7 @@ import androidx.appcompat.widget.SearchView;
 
 
 import com.example.stims_v9.Adapters.MyAdapter;
+import com.example.stims_v9.Button.CalendarFragment;
 import com.example.stims_v9.Button.StudentList;
 import com.example.stims_v9.Model.Model;
 import com.google.android.material.button.MaterialButton;
@@ -60,9 +64,9 @@ public class StatFragment extends Fragment {
     ArrayList<String> sectionList;
 
 
-    String selectedSubject, selectedSection;
+    String selectedSubject, selectedSection,dateRef;
 
-    MaterialButton btnStatFragEveryStudent, btnCalendarView;
+    MaterialButton btnStatFragEveryStudent, btnCalendarView, btnCalendarViewHideCalendarStatFrag;
     SearchView search_view;
     CalendarView calendarView;
     Calendar calendar = Calendar.getInstance();
@@ -82,6 +86,7 @@ public class StatFragment extends Fragment {
 
     btnCalendarView = v.findViewById(R.id.btnCalendarView);
     btnStatFragEveryStudent = v.findViewById(R.id.btnStatFragEveryStudent);
+    btnCalendarViewHideCalendarStatFrag = v.findViewById(R.id.btnCalendarViewHideCalendarStatFrag);
 
 
     list = new ArrayList<>();
@@ -89,17 +94,11 @@ public class StatFragment extends Fragment {
     subjectList = new ArrayList<>();
     sectionList = new ArrayList<>();
 
-    calendarView.setVisibility(View.GONE);
-    recyclerView.setHasFixedSize(true);
+    recyclerView.setHasFixedSize(false);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     recyclerView.setAdapter(adapter);
 
-    btnCalendarView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            hideCalendarView();
-        }
-    });
+
 
     btnStatFragEveryStudent.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -111,36 +110,28 @@ public class StatFragment extends Fragment {
     updateSubjectSpinner();
     updateSectionSpinner();
 
-
-
+    btnCalendarViewHideCalendarStatFrag.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            replaceFragment(new CalendarFragment());
+            hideBtnForCalendarFragment();
+        }
+    });
+    btnCalendarView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            hideCalendarView();
+        }
+    });
 
 
     calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
         @Override
         public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
-
             calendar.set(year, month, dayOfMonth);
             long date = calendar.getTimeInMillis();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMMM, d,EEEE");
-            String dateRef = sdf.format(new Date(date));
-
-
-            DatabaseReference datePickerRef = attendanceRef.child(selectedSection).child(selectedSubject).child(dateRef);
-
-            datePickerRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    list.clear();
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        Model model = dataSnapshot.getValue(Model.class);
-                        list.add(model);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
+            dateRef = sdf.format(new Date(date));
         }
     });
 
@@ -156,7 +147,7 @@ public class StatFragment extends Fragment {
         @Override
         public boolean onQueryTextChange(String s) {
 
-            MatrixCursor cursor = new MatrixCursor(new String[]{"_id", "student_name"});
+            MatrixCursor cursor = new MatrixCursor(new String[]{"_id", "student_name", "uid"});
             DatabaseReference studentNameDatabase = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
                     .getReference("Suggestions");
             studentNameDatabase.addValueEventListener(new ValueEventListener() {
@@ -164,10 +155,15 @@ public class StatFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     int i = 0;
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        String studentName = dataSnapshot.getValue(String.class);
-                        cursor.addRow(new Object[]{i, studentName});
-                        Log.d("DataSnapshot", "Data added: " + studentName);
+                        String studentNameUid = dataSnapshot.getValue(String.class);
+                        String[] parts = studentNameUid.split(",");
+                        String studentName = parts[0];
+                        String userId = parts[1];
+                        cursor.addRow(new Object[]{i, studentName, userId});
+                        Log.d("DataSnapshot", "Data added: " + studentName + userId);
                         i++;
+                        setSearchView(userId);
+
                     }
                 }
                 @Override
@@ -196,36 +192,41 @@ public class StatFragment extends Fragment {
             });
             search_view.setSuggestionsAdapter(adapter3);
 
-            DatabaseReference searchRootRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                    .getReference("Scans");
-            DatabaseReference searchRef = searchRootRef.child(s).child(selectedSubject);
-            searchRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    list.clear();
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        Model model = dataSnapshot.getValue(Model.class);
-                        list.add(model);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
+
 
             return false;
         }
     });
+
+
         return v;
     }
 
+    private void hideBtnForCalendarFragment() {
+    spinner_subject_stat_fragment.setVisibility(View.GONE);
+    spinnerStatFragSection.setVisibility(View.GONE);
+    search_view.setVisibility(View.GONE);
+    btnCalendarView.setVisibility(View.GONE);
+    btnCalendarViewHideCalendarStatFrag.setVisibility(View.GONE);
+    btnStatFragEveryStudent.setVisibility(View.GONE);
+    recyclerView.setVisibility(View.GONE);
+    calendarView.setVisibility(View.GONE);
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
+    }
     public void hideCalendarView(){
         int visibility = calendarView.getVisibility();
         if (visibility == View.GONE || visibility == View.INVISIBLE) {
             calendarView.setVisibility(View.VISIBLE);
+            btnCalendarView.setText("HIDE CALENDAR");
         } else {
             calendarView.setVisibility(View.GONE);
+            btnCalendarView.setText("SHOW CALENDAR");
         }
     }
 
@@ -240,7 +241,7 @@ public class StatFragment extends Fragment {
     }
 
     private void updateSubjectSpinner() {
-        everySubjectsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        everySubjectsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 subjectList.clear();
@@ -293,6 +294,26 @@ public class StatFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {   } });
     }
+    public void setSearchView(String uid){
+    DatabaseReference searchRootRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
+            .getReference("Attendance");
+        if(!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(dateRef)) {
+            DatabaseReference attendanceRef = searchRootRef.child(selectedSection).child(selectedSubject).child(dateRef);
+            attendanceRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    list.clear();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Model model = dataSnapshot.getValue(Model.class);
+                        list.add(model);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }}
 
 
 
