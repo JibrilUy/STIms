@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Login.SignIn"
     android:orientation="vertical"
-    android:background="@color/sti_grey">
+    android:background="@color/sti_blue">
 
 
     <TextView
@@ -60,13 +60,12 @@
         android:id="@+id/btnSignIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:layout_marginStart="40dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="40dp"
+        android:backgroundTint="@color/sti_yellow"
         android:text="SIGN IN"
-        android:textColorHint="@color/white"
-        android:backgroundTint="@color/grey2"
-        />
+        android:textColor="@color/sti_black" />
 
     <TextView
         android:id="@+id/textViewRedirectToRegister"

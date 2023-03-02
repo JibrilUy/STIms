@@ -46,13 +46,11 @@
             android:name=".Login.SignIn"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:theme="@style/Theme.MaterialComponents.NoActionBar"
             tools:replace="android:screenOrientation" />
         <activity
             android:name=".Login.Register"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:theme="@style/Theme.MaterialComponents.NoActionBar"
             tools:replace="android:screenOrientation" />
         <activity
             android:name=".MainActivity"

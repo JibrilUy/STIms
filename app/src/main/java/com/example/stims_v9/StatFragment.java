@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.appcompat.widget.SearchView;
@@ -63,6 +64,10 @@ public class StatFragment extends Fragment {
     ArrayList<String> subjectList;
     ArrayList<String> sectionList;
 
+    private long startDate = 0;
+    private long endDate = 0;
+    private boolean isStartDateSelected = false;
+
 
     String selectedSubject, selectedSection,dateRef;
 
@@ -70,6 +75,7 @@ public class StatFragment extends Fragment {
     SearchView search_view;
     CalendarView calendarView;
     Calendar calendar = Calendar.getInstance();
+    EditText editTextInstructionStatFrag;
 
     RecyclerView recyclerView;
 @Override
@@ -87,6 +93,7 @@ public class StatFragment extends Fragment {
     btnCalendarView = v.findViewById(R.id.btnCalendarView);
     btnStatFragEveryStudent = v.findViewById(R.id.btnStatFragEveryStudent);
     btnCalendarViewHideCalendarStatFrag = v.findViewById(R.id.btnCalendarViewHideCalendarStatFrag);
+    editTextInstructionStatFrag = v.findViewById(R.id.editTextInstructionStatFrag);
 
 
     list = new ArrayList<>();
@@ -124,7 +131,6 @@ public class StatFragment extends Fragment {
         }
     });
 
-
     calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
         @Override
         public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
@@ -132,13 +138,15 @@ public class StatFragment extends Fragment {
             long date = calendar.getTimeInMillis();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMMM, d,EEEE");
             dateRef = sdf.format(new Date(date));
+            hideCalendarView();
         }
     });
 
 
+
+
+
     search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-
         @Override
         public boolean onQueryTextSubmit(String s) {
             return false;
@@ -163,7 +171,6 @@ public class StatFragment extends Fragment {
                         Log.d("DataSnapshot", "Data added: " + studentName + userId);
                         i++;
                         setSearchView(userId);
-
                     }
                 }
                 @Override
@@ -173,7 +180,6 @@ public class StatFragment extends Fragment {
             });
             SimpleCursorAdapter adapter3 = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, cursor,
                     new String[]{"student_name"}, new int[]{android.R.id.text1}, 0);
-
             search_view.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
                 @Override
                 public boolean onSuggestionSelect(int position) {
@@ -227,6 +233,7 @@ public class StatFragment extends Fragment {
         } else {
             calendarView.setVisibility(View.GONE);
             btnCalendarView.setText("SHOW CALENDAR");
+            editTextInstructionStatFrag.setVisibility(View.GONE);
         }
     }
 
