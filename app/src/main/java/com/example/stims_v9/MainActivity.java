@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setLogo(R.mipmap.stims_launcher_round);
+        actionBar.setLogo(R.mipmap.stims_logo_round);
 
         View customView = getLayoutInflater().inflate(R.layout.action_bar_custom_view,null);
         actionBar.setCustomView(customView);

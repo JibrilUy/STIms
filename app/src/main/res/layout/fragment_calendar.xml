@@ -74,6 +74,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnHideCalendarCalendarFragment"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:text="Hide Calendar"
+                        android:textColor="@color/white"
+                        app:strokeColor="@color/sti_white"
+                        app:strokeWidth="2dp"
+
+                        />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnExitCalendarFragment"
@@ -82,10 +95,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        android:text="Cancel"
+                        android:text="Exit"
                         android:textColor="@color/white"
-                        app:strokeColor="@color/grey"
-                        app:strokeWidth="3dp"
+                        app:strokeColor="@color/sti_beige"
+                        app:strokeWidth="2dp"
 
                         />
 

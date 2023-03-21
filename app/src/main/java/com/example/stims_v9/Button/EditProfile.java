@@ -306,7 +306,7 @@ public class EditProfile extends Fragment {
                 if(!everyStudent.contains(userName)){
                     String name = userName;
                     everyStudentRef.child(name).child("student_name").setValue(name);
-                    suggestionsRef.push().setValue(name + "," + userId);
+//                    suggestionsRef.push().setValue(name + "," + userId);
 
                 }
             }

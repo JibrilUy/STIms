@@ -46,14 +46,13 @@ public class CalendarFragment extends Fragment {
     RecyclerView recyclerViewCalendarFrag;
 
     Spinner spinnerSectionCalendarFrag, spinnerSubjectCalendarFrag;
-    MaterialButton btnExitCalendarFragment;
+    MaterialButton btnExitCalendarFragment,btnHideCalendarCalendarFragment;
 
     String dateRef;
     ArrayList<Model> list = new ArrayList<>();
     ArrayList<String> subjectList = new ArrayList<>();
     ArrayList<String> sectionList = new ArrayList<>();
     MyAdapter adapter = new MyAdapter(getActivity(), list);
-    ;
     String selectedSubject, selectedSection;
 
 
@@ -70,6 +69,7 @@ public class CalendarFragment extends Fragment {
         spinnerSubjectCalendarFrag = v.findViewById(R.id.spinnerSubjectCalendarFrag);
         btnExitCalendarFragment = v.findViewById(R.id.btnExitCalendarFragment);
         recyclerViewCalendarFrag = v.findViewById(R.id.recyclerViewCalendarFrag);
+        btnHideCalendarCalendarFragment = v.findViewById(R.id.btnHideCalendarCalendarFragment);
 
         updateSubjectSpinner();
         updateSectionSpinner();
@@ -82,6 +82,13 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 closeFragment(new StatFragment());
+            }
+        });
+
+        btnHideCalendarCalendarFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideCalendarView();
             }
         });
 
@@ -121,6 +128,16 @@ public class CalendarFragment extends Fragment {
 
 
         return v;
+    }
+    public void hideCalendarView(){
+        int visibility = calendarViewCalendarFrag.getVisibility();
+        if (visibility == View.GONE || visibility == View.INVISIBLE) {
+            calendarViewCalendarFrag.setVisibility(View.VISIBLE);
+            btnHideCalendarCalendarFragment.setText("HIDE CALENDAR");
+        } else {
+            calendarViewCalendarFrag.setVisibility(View.GONE);
+            btnHideCalendarCalendarFragment.setText("SHOW CALENDAR");
+        }
     }
 
     private void closeFragment(Fragment fragment) {

@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.SearchView;
 
@@ -75,7 +76,7 @@ public class StatFragment extends Fragment {
     SearchView search_view;
     CalendarView calendarView;
     Calendar calendar = Calendar.getInstance();
-    EditText editTextInstructionStatFrag;
+    TextView editTextInstructionStatFrag;
 
     RecyclerView recyclerView;
 @Override
@@ -217,6 +218,7 @@ public class StatFragment extends Fragment {
     btnStatFragEveryStudent.setVisibility(View.GONE);
     recyclerView.setVisibility(View.GONE);
     calendarView.setVisibility(View.GONE);
+    editTextInstructionStatFrag.setVisibility(View.GONE);
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -230,6 +232,7 @@ public class StatFragment extends Fragment {
         if (visibility == View.GONE || visibility == View.INVISIBLE) {
             calendarView.setVisibility(View.VISIBLE);
             btnCalendarView.setText("HIDE CALENDAR");
+            editTextInstructionStatFrag.setVisibility(View.VISIBLE);
         } else {
             calendarView.setVisibility(View.GONE);
             btnCalendarView.setText("SHOW CALENDAR");

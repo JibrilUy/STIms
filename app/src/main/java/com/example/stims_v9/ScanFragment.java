@@ -27,6 +27,7 @@ import com.example.stims_v9.Adapters.SharedViewModel;
 import com.example.stims_v9.Button.Capture;
 import com.example.stims_v9.Button.SubjectFragment;
 import com.example.stims_v9.Button.ViolationFragment;
+import com.example.stims_v9.display.ViolationDisplayFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,17 +49,17 @@ public class ScanFragment extends Fragment {
     //Initialize variable
     String date = new SimpleDateFormat("yyyy, MMMM, d,EEEE", Locale.getDefault()).format(new Date());
     String time = new SimpleDateFormat("h:mm:a", Locale.getDefault()).format(new Date());
-    String nameModel, selectedSubject,selectedSection, userId, userName, userViolation;
-    Button btn_scan ;
+    String nameModel, selectedSubject, selectedSection, userId, userName, userViolation, userDataName;
+    Button btn_scan;
     MaterialButton btn_subjects, btnAddViolationScanFrag;
     Spinner spinner_subjects, spinnerScanFragSection;
     Switch switchCheckInAndOut;
     TextView text_view_subject_selected, textViewScanFragSectionSelected;
 
     ArrayList<String> everyStudent = new ArrayList<>();
-    ArrayList <String> subjectList = new ArrayList<>();
+    ArrayList<String> subjectList = new ArrayList<>();
 
-    ArrayList <String> sectionList = new ArrayList<>();
+    ArrayList<String> sectionList = new ArrayList<>();
 
     SharedViewModel viewModel;
 
@@ -73,7 +74,6 @@ public class ScanFragment extends Fragment {
 
     DatabaseReference everySubjectRef = root.child("Subjects");
     DatabaseReference everySectionRef = root.child("Sections");
-
 
 
     @Override
@@ -119,34 +119,41 @@ public class ScanFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 updateSubjectSpinner(dataSnapshot);
-                if(isAdded()) {
+                if (isAdded()) {
                     ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, subjectList);
                     spinner_subjects.setAdapter(subjectAdapter);
                 }
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {   }});
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
 
         spinner_subjects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedSubject = spinner_subjects.getSelectedItem().toString();
             }
+
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }});
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
         everySectionRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 updateSectionSpinner(dataSnapshot);
-                if(isAdded()) {
+                if (isAdded()) {
                     ArrayAdapter<String> sectionAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, sectionList);
                     spinnerScanFragSection.setAdapter(sectionAdapter);
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {  }
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
 
         spinnerScanFragSection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -154,54 +161,30 @@ public class ScanFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedSection = spinnerScanFragSection.getSelectedItem().toString();
             }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }});
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
 
         final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
                 result -> {
                     result.getClass();
                     String scanResult = result.getContents();
-                    if(TextUtils.isEmpty(scanResult)) {
+                    if (TextUtils.isEmpty(scanResult)) {
                         Toast.makeText(getActivity(), "NOTHING SCANNED", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         viewModel.setData(scanResult);
                     }
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Student Name");
-                    builder.setMessage("Selected Section: " + selectedSection + "\n" + "Selected Subject: "+ selectedSubject);
-                    builder.setPositiveButton("CANCEL", (dialogInterface, i) -> {
-                        Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
-                        dialogInterface.dismiss();
-                    });
 
-                    builder.setNeutralButton("VIOLATION", (dialogInterface, i) -> {
-                        replaceFragment(new ViolationFragment());
-                        hideButtons();
-                        dialogInterface.dismiss();
-                    });
-                    builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
+                    openAlertDialogAfterScan(scanResult);
+                    checkStudentViolation(scanResult);
 
-                        if(!TextUtils.isEmpty(scanResult)) {
-
-
-                            DatabaseReference userDataRef = root.child("UserData").child(scanResult);
-                            userDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    userName = dataSnapshot.child("name").getValue(String.class);
-                                    checkStudentInAndOut(scanResult, userName);
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                }
-                            });
-                        }
+                    ViolationDisplayFragment violationDisplayFragment = new ViolationDisplayFragment();
+                    violationDisplayFragment.displayViolationRecycler(scanResult);
 
                 });
-        builder.show();
-    });
 
         btn_scan.setOnClickListener(view -> {
             barcodeLauncher.launch(new ScanOptions());
@@ -220,20 +203,22 @@ public class ScanFragment extends Fragment {
     }
 
 
-    public void switchBtnIfAndElse(DatabaseReference databaseReference, String date, String check_in, String uid, String name){
-        if(switchState){
+    public void switchBtnIfAndElse(DatabaseReference databaseReference, String date, String check_in, String uid, String name) {
+        if (switchState) {
             checkOutData(databaseReference, time);
-        }else{
+        } else {
             checkInData(databaseReference, date, check_in, uid, name);
         }
     }
-    public void changeSwitchText(){
+
+    public void changeSwitchText() {
         if (switchState) {
             switchCheckInAndOut.setText("CHECK OUT");
         } else {
             switchCheckInAndOut.setText("CHECK IN");
         }
     }
+
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -266,18 +251,18 @@ public class ScanFragment extends Fragment {
         }
     }
 
-    public void checkInData(DatabaseReference databaseReferenceRef, String date, String check_in, String uid, String name){
+    public void checkInData(DatabaseReference databaseReferenceRef, String date, String check_in, String uid, String name) {
         databaseReferenceRef.child("Date").setValue(date);
         databaseReferenceRef.child("Check_In").setValue(check_in);
         databaseReferenceRef.child("UID").setValue(uid);
         databaseReferenceRef.child("Name").setValue(name);
     }
 
-    public void checkOutData(DatabaseReference databaseReferenceRef, String time){
+    public void checkOutData(DatabaseReference databaseReferenceRef, String time) {
         databaseReferenceRef.child("Check_Out").setValue(time).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check Out Successfully", Toast.LENGTH_SHORT).show());
     }
 
-    public void startScan(){
+    public void startScan() {
         Toast.makeText(getActivity(), "For Flash use Volume up Key", Toast.LENGTH_SHORT).show();
         ScanOptions options = new ScanOptions();
         options.setBeepEnabled(true);
@@ -285,7 +270,7 @@ public class ScanFragment extends Fragment {
         options.setCaptureActivity(Capture.class);
     }
 
-    public void checkStudentInAndOut(String scanResult, String name){
+    public void checkStudentInAndOut(String scanResult, String name) {
         DatabaseReference attendanceRootRef = root.child("Attendance").child(selectedSection).child(selectedSubject).child(date).child(scanResult);
         attendanceRootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -293,16 +278,87 @@ public class ScanFragment extends Fragment {
                 if (snapshot.child("Check_In").exists()) {
                     checkOutData(attendanceRootRef, time);
                 } else {
-                    checkInData(attendanceRootRef,date, time,scanResult, name);
+                    checkInData(attendanceRootRef, date, time, scanResult, name);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    public void checkStudentViolation(String scanResult){
+        DatabaseReference userViolationRef = root.child("UserData").child(scanResult);
+        userViolationRef.child("violations").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    replaceFragment(new ViolationDisplayFragment());
                 }
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {  }
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    public void openAlertDialogAfterScan(String scanResult){
+        DatabaseReference userDatabaseRef = root.child("UserData").child(scanResult);
+        userDatabaseRef.child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    userDataName = snapshot.getValue(String.class);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(userDataName);
+                    builder.setMessage("Selected Section: " + selectedSection + "\n" + "Selected Subject: " + selectedSubject);
+                    builder.setPositiveButton("CANCEL", (dialogInterface, i) -> {
+                        Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
+                        dialogInterface.dismiss();
+                    });
+
+                    builder.setNeutralButton("VIOLATION", (dialogInterface, i) -> {
+                        replaceFragment(new ViolationFragment());
+                        hideButtons();
+                        dialogInterface.dismiss();
+                    });
+                    builder.setNegativeButton("CHECK IN/OUT", (dialogInterface, i) -> {
+
+                        if (!TextUtils.isEmpty(scanResult)) {
+
+                            DatabaseReference userDataRef = root.child("UserData").child(scanResult);
+                            userDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    userName = dataSnapshot.child("name").getValue(String.class);
+                                    checkStudentInAndOut(scanResult, userName);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                        }
+
+                    });
+                    builder.show();
+
+                }else{
+                    Toast.makeText(getActivity(), "Student Name not Recorded", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
     }
 
 
 
 }
+
+
 
 

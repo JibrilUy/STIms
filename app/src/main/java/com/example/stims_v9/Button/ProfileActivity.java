@@ -240,7 +240,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
     public void getValueFromUserData(String childNode, TextView textView){
-
         String userId = mAuth.getCurrentUser().getUid();
         DatabaseReference userDatabaseRef = root.child("UserData").child(userId);
         userDatabaseRef.child(childNode).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -251,7 +250,6 @@ public class ProfileActivity extends AppCompatActivity {
                     displayTextOnTextView(textView, userData);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }

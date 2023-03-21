@@ -23,7 +23,7 @@
         android:orientation="vertical"
         android:layout_marginTop="20dp"
         >
-        <EditText
+        <TextView
             android:gravity="center"
             android:id="@+id/editTextInstructionStatFrag"
             android:layout_width="match_parent"
@@ -58,13 +58,15 @@
 
         <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCalendarView"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
+        app:strokeColor="@color/sti_white"
+        app:strokeWidth="2dp"
         android:text="HIDE CALENDAR"
-        app:iconTint="@color/sti_white" />
+         />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStatFragEveryStudent"
