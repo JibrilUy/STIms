@@ -27,6 +27,7 @@ import com.example.stims_v9.Adapters.SharedViewModel;
 import com.example.stims_v9.Button.Capture;
 import com.example.stims_v9.Button.SubjectFragment;
 import com.example.stims_v9.Button.ViolationFragment;
+import com.example.stims_v9.display.ScanResultHolder;
 import com.example.stims_v9.display.ViolationDisplayFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -176,13 +177,14 @@ public class ScanFragment extends Fragment {
                         Toast.makeText(getActivity(), "NOTHING SCANNED", Toast.LENGTH_SHORT).show();
                     } else {
                         viewModel.setData(scanResult);
+
+                        openAlertDialogAfterScan(scanResult);
+                        checkStudentViolation(scanResult);
+
+                        ScanResultHolder.setScanResult(scanResult);
+
                     }
 
-                    openAlertDialogAfterScan(scanResult);
-                    checkStudentViolation(scanResult);
-
-                    ViolationDisplayFragment violationDisplayFragment = new ViolationDisplayFragment();
-                    violationDisplayFragment.displayViolationRecycler(scanResult);
 
                 });
 
@@ -294,6 +296,7 @@ public class ScanFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+
                     replaceFragment(new ViolationDisplayFragment());
                 }
             }
