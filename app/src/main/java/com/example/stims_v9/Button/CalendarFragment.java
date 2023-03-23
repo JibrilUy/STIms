@@ -49,9 +49,9 @@ public class CalendarFragment extends Fragment {
     MaterialButton btnExitCalendarFragment,btnHideCalendarCalendarFragment;
 
     String dateRef;
-    ArrayList<Model> list = new ArrayList<>();
     ArrayList<String> subjectList = new ArrayList<>();
     ArrayList<String> sectionList = new ArrayList<>();
+    ArrayList<Model> list = new ArrayList<>();
     MyAdapter adapter = new MyAdapter(getActivity(), list);
     String selectedSubject, selectedSection;
 

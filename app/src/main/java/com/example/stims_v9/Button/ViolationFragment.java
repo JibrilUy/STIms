@@ -121,7 +121,7 @@ public class ViolationFragment extends Fragment {
             DatabaseReference userDatabaseRef = root.child("UserData").child(userID).child("violations").push();
             String violationDescription = editTextAddDescriptionViolationFrag.getText().toString();
 
-            userDatabaseRef.child(selectedViolation).setValue(selectedViolation);
+            userDatabaseRef.child("violation").setValue(selectedViolation);
             userDatabaseRef.child("description").setValue(violationDescription);
 
             userDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
