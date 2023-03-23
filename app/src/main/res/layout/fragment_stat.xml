@@ -144,8 +144,6 @@
                 android:textColorHint="@color/white"
                 />
 
-
-
         </LinearLayout>
 
     </LinearLayout>

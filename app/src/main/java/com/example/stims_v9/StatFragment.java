@@ -70,7 +70,7 @@ public class StatFragment extends Fragment {
     private boolean isStartDateSelected = false;
 
 
-    String selectedSubject, selectedSection,dateRef;
+    String selectedSubject, selectedSection,dateRef, userId;
 
     MaterialButton btnStatFragEveryStudent, btnCalendarView, btnCalendarViewHideCalendarStatFrag;
     SearchView search_view;
@@ -167,11 +167,10 @@ public class StatFragment extends Fragment {
                         String studentNameUid = dataSnapshot.getValue(String.class);
                         String[] parts = studentNameUid.split(",");
                         String studentName = parts[0];
-                        String userId = parts[1];
+                        userId = parts[1];
                         cursor.addRow(new Object[]{i, studentName, userId});
                         Log.d("DataSnapshot", "Data added: " + studentName + userId);
                         i++;
-                        setSearchView(userId);
                     }
                 }
                 @Override
@@ -179,6 +178,8 @@ public class StatFragment extends Fragment {
 
                 }
             });
+
+
             SimpleCursorAdapter adapter3 = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, cursor,
                     new String[]{"student_name"}, new int[]{android.R.id.text1}, 0);
             search_view.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
@@ -191,9 +192,34 @@ public class StatFragment extends Fragment {
                 public boolean onSuggestionClick(int position) {
                     Cursor cursor = (Cursor) search_view.getSuggestionsAdapter().getItem(position);
 
+
+                    @SuppressLint("Range") String uid = cursor.getString(cursor.getColumnIndex("uid"));
+
+
+                    DatabaseReference searchRootRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                            .getReference("Attendance");
+                    if(!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(dateRef)) {
+                        DatabaseReference attendanceRef = searchRootRef.child(selectedSection).child(selectedSubject).child(dateRef).child(uid);
+                        attendanceRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                list.clear();
+                                Model model = snapshot.getValue(Model.class);
+                                list.add(model);
+                                adapter.notifyDataSetChanged();
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {  }  });
+
+                    }
+
+
+
+
                     //Column must not be 0
                     @SuppressLint("Range") String suggestion = cursor.getString(cursor.getColumnIndex("student_name"));
                     search_view.setQuery(suggestion, false);
+
                     return false;
                 }
             });
@@ -308,15 +334,13 @@ public class StatFragment extends Fragment {
     DatabaseReference searchRootRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
             .getReference("Attendance");
         if(!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(dateRef)) {
-            DatabaseReference attendanceRef = searchRootRef.child(selectedSection).child(selectedSubject).child(dateRef);
+            DatabaseReference attendanceRef = searchRootRef.child(selectedSection).child(selectedSubject).child(dateRef).child(uid);
             attendanceRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     list.clear();
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        Model model = dataSnapshot.getValue(Model.class);
-                        list.add(model);
-                    }
+                    Model model = snapshot.getValue(Model.class);
+                    list.add(model);
                     adapter.notifyDataSetChanged();
                 }
                 @Override
