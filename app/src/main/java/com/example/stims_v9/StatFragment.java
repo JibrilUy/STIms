@@ -168,9 +168,12 @@ public class StatFragment extends Fragment {
                         String[] parts = studentNameUid.split(",");
                         String studentName = parts[0];
                         userId = parts[1];
-                        cursor.addRow(new Object[]{i, studentName, userId});
-                        Log.d("DataSnapshot", "Data added: " + studentName + userId);
-                        i++;
+
+                        if (studentName.toLowerCase().startsWith(s.toLowerCase())) {
+                            cursor.addRow(new Object[]{i, studentName, userId});
+                            Log.d("DataSnapshot", "Data added: " + studentName + userId);
+                            i++;
+                        }
                     }
                 }
                 @Override
@@ -187,14 +190,11 @@ public class StatFragment extends Fragment {
                 public boolean onSuggestionSelect(int position) {
                     return false;
                 }
-
                 @Override
                 public boolean onSuggestionClick(int position) {
                     Cursor cursor = (Cursor) search_view.getSuggestionsAdapter().getItem(position);
 
-
                     @SuppressLint("Range") String uid = cursor.getString(cursor.getColumnIndex("uid"));
-
 
                     DatabaseReference searchRootRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
                             .getReference("Attendance");
@@ -210,11 +210,7 @@ public class StatFragment extends Fragment {
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {  }  });
-
                     }
-
-
-
 
                     //Column must not be 0
                     @SuppressLint("Range") String suggestion = cursor.getString(cursor.getColumnIndex("student_name"));
@@ -225,13 +221,9 @@ public class StatFragment extends Fragment {
             });
             search_view.setSuggestionsAdapter(adapter3);
 
-
-
             return false;
         }
     });
-
-
         return v;
     }
 
