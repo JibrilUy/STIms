@@ -83,9 +83,9 @@ public class StudentList extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list2.clear();
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                                String studentName = dataSnapshot.getValue(String.class);
-                                Model2 student = new Model2(studentName);
-                                list2.add(student);
+                            String studentName = dataSnapshot.getValue(String.class);
+                            Model2 student = new Model2(studentName);
+                            list2.add(student);
                         }
                         adapter2 = new MyAdapter2(getApplicationContext(), list2);
                         recyclerView2.setAdapter(adapter2);

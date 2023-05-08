@@ -9,13 +9,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerVertical="true"
         android:gravity="top|center"
-        android:layout_marginStart="60dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
         android:layout_marginBottom="100dp"
-
 
         >
         <LinearLayout
@@ -28,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:background="@color/red"
+            android:background="@color/sti_yellow"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -45,6 +42,7 @@
                     android:layout_marginStart="20dp"
                     android:text="Lelouch Lamperouge"
                     android:textSize="20dp"
+                    android:textColor="@color/sti_blue"
                     />
 
                 <com.google.android.material.button.MaterialButton
@@ -55,7 +53,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:text="X"
-                    android:textColor="@color/white"
+                    android:textColor="@color/sti_blue"
                     app:strokeColor="@color/grey"
                     app:strokeWidth="3dp" />
 
@@ -67,6 +65,8 @@
                 android:layout_marginLeft="10dp"
                 android:text="Violation Committed"
                 android:textSize="20dp"
+                android:textColor="@color/sti_blue"
+
                 />
         </LinearLayout>
 
@@ -74,7 +74,8 @@
                 android:id="@+id/recyclerViewDisplayViolationFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/darker_red"
+                android:background="@color/sti_white"
+                android:paddingBottom="15dp"
                 />
         </LinearLayout>
 

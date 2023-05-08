@@ -23,7 +23,7 @@
         android:backgroundTint="@color/sti_blue">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:orientation="vertical">
@@ -38,7 +38,7 @@
                     android:text="Violation: "
                     android:textStyle="bold"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     android:layout_marginLeft="10dp"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -46,8 +46,8 @@
                     android:text="Campione"
                     android:textStyle="bold"
                     android:textColor="@color/white"
-                    android:textSize="17sp"
-                    android:layout_marginStart="20dp"
+                    android:textSize="13sp"
+                    android:layout_marginStart="5dp"
                     android:id="@+id/textViewViolationItemViolation"/>
             </LinearLayout>
             <LinearLayout
@@ -57,19 +57,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Description: "
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:layout_marginLeft="10dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="No Description Found"
                     android:textStyle="bold"
                     android:textColor="@color/white"
-                    android:textSize="17sp"
-                    android:layout_marginStart="20dp"
+                    android:textSize="13sp"
+                    android:layout_marginStart="5dp"
                     android:id="@+id/textViewDescriptionItemViolation"/>
 
             </LinearLayout>

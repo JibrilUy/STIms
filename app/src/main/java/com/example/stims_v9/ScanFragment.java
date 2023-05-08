@@ -320,6 +320,7 @@ public class ScanFragment extends Fragment {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(userDataName);
+                    builder.setCancelable(false);
                     builder.setMessage("Selected Section: " + selectedSection + "\n" + "Selected Subject: " + selectedSubject);
                     builder.setPositiveButton("CANCEL", (dialogInterface, i) -> {
                         Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();

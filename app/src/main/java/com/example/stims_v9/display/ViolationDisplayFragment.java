@@ -52,7 +52,6 @@ public class ViolationDisplayFragment extends Fragment {
     RecyclerView recyclerViewDisplayViolationFragment;
 
     ArrayList<ViolationModel> violationList = new ArrayList<>();
-    ViolationAdapter violationAdapter = new ViolationAdapter(getContext(), violationList);
 
 
     @Override
@@ -74,7 +73,6 @@ public class ViolationDisplayFragment extends Fragment {
 
         recyclerViewDisplayViolationFragment.setHasFixedSize(true);
         recyclerViewDisplayViolationFragment.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerViewDisplayViolationFragment.setAdapter(violationAdapter);
 
         btnExitDisplayViolationDisplayFrag.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,27 +82,29 @@ public class ViolationDisplayFragment extends Fragment {
         });
 
         DatabaseReference userViolationRef = root.child("UserData").child(scanResult).child("violations");
-//        userViolationRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                Log.d("TAG", "onDataChange: snapshot.exists() = " + snapshot.exists()); // add this log
-//                if(snapshot.exists()){
-//                    violationList.clear();
-//                    for (DataSnapshot pushSnapshot : snapshot.getChildren()){
-//                        for (DataSnapshot dataSnapshot : pushSnapshot.getChildren()){
-//                            ViolationModel violationModel = dataSnapshot.getValue(ViolationModel.class);
-//                            violationList.add(violationModel);
-//                        }
-//                    }
-//                    violationAdapter.notifyDataSetChanged();
-//                    Log.d("TAG", "onDataChange: violationList size = " + violationList.size()); // add this log
-//                }
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Log.d("TAG", "onCancelled: " + error.getMessage()); // add this log
-//            }
-//        });
+        userViolationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    violationList.clear();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        String violation = dataSnapshot.child("violations").getValue(String.class);
+                        String description = dataSnapshot.child("description").getValue(String.class);
+
+                        ViolationModel violationDetails = new ViolationModel(violation, description);
+                        violationList.add(violationDetails);
+
+                    }
+                    ViolationAdapter violationAdapter = new ViolationAdapter(getContext(), violationList);
+                    recyclerViewDisplayViolationFragment.setAdapter(violationAdapter);
+
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("TAG", "onCancelled: " + error.getMessage()); // add this log
+            }
+        });
 
 
 
