@@ -258,10 +258,14 @@ public class ScanFragment extends Fragment {
         databaseReferenceRef.child("Check_In").setValue(check_in);
         databaseReferenceRef.child("UID").setValue(uid);
         databaseReferenceRef.child("Name").setValue(name);
+        Toast.makeText(getActivity(), "Checked In", Toast.LENGTH_SHORT).show();
+
     }
 
     public void checkOutData(DatabaseReference databaseReferenceRef, String time) {
         databaseReferenceRef.child("Check_Out").setValue(time).addOnSuccessListener(unused -> Toast.makeText(getActivity(), "Check Out Successfully", Toast.LENGTH_SHORT).show());
+        Toast.makeText(getActivity(), "Checked Out ", Toast.LENGTH_SHORT).show();
+
     }
 
     public void startScan() {

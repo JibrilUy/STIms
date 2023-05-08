@@ -58,19 +58,17 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setLogo(R.mipmap.stims_logo_round);
 
-        View customView = getLayoutInflater().inflate(R.layout.action_bar_custom_view,null);
-        actionBar.setCustomView(customView);
-
-
-
-        ImageButton imageButton = customView.findViewById(R.id.imageButton);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openProfileActivity();
-
-            }
-        });
+//        View customView = getLayoutInflater().inflate(R.layout.action_bar_custom_view,null);
+//        actionBar.setCustomView(customView);
+//
+//        ImageButton imageButton = customView.findViewById(R.id.imageButton);
+//        imageButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openProfileActivity();
+//
+//            }
+//        });
 
             binding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());

@@ -69,7 +69,6 @@ public class StatFragment extends Fragment {
     private long endDate = 0;
     private boolean isStartDateSelected = false;
 
-
     String selectedSubject, selectedSection,dateRef, userId;
 
     MaterialButton btnStatFragEveryStudent, btnCalendarView, btnCalendarViewHideCalendarStatFrag;
@@ -79,7 +78,7 @@ public class StatFragment extends Fragment {
     TextView editTextInstructionStatFrag;
 
     RecyclerView recyclerView;
-@Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.fragment_stat, container, false);
@@ -245,6 +244,7 @@ public class StatFragment extends Fragment {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
+
     public void hideCalendarView(){
         int visibility = calendarView.getVisibility();
         if (visibility == View.GONE || visibility == View.INVISIBLE) {
@@ -322,6 +322,7 @@ public class StatFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {   } });
     }
+
     public void setSearchView(String uid){
     DatabaseReference searchRootRef = FirebaseDatabase.getInstance("https://stims-v9-default-rtdb.asia-southeast1.firebasedatabase.app/")
             .getReference("Attendance");

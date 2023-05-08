@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class StudentList extends AppCompatActivity {
 
@@ -56,9 +58,6 @@ public class StudentList extends AppCompatActivity {
         setContentView(R.layout.activity_student_list);
 
 
-
-
-
         recyclerView2 = findViewById(R.id.recycler_view_2);
 
         recyclerView2.setHasFixedSize(true);
@@ -66,7 +65,6 @@ public class StudentList extends AppCompatActivity {
 
         list2 = new ArrayList<>();
 
-        adapter2 = new MyAdapter2(this, list2);
 
         spinnerStudentListActivitySection = findViewById(R.id.spinnerStudentListActivitySection);
 
@@ -85,10 +83,14 @@ public class StudentList extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list2.clear();
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                            Model2 nameModel = dataSnapshot.getValue(Model2.class);
-                            list2.add(nameModel);
+                                String studentName = dataSnapshot.getValue(String.class);
+                                Model2 student = new Model2(studentName);
+                                list2.add(student);
                         }
+                        adapter2 = new MyAdapter2(getApplicationContext(), list2);
                         recyclerView2.setAdapter(adapter2);
+                        Log.d("FirebaseDebug", "List2 size: " + list2.size());
+
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {  }
