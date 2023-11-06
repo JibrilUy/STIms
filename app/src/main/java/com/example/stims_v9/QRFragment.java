@@ -122,7 +122,6 @@ public class QRFragment extends Fragment {
             ContentResolver resolver = getActivity().getContentResolver();
 
             ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME,"STIms_QR_Generated_" + name + ".jpg");
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE,"Image/jpg");
             Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
 

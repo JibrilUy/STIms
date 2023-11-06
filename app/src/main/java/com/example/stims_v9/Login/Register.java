@@ -70,13 +70,13 @@ public class Register extends AppCompatActivity {
 
                 progressBarRegister.setVisibility(View.VISIBLE);
 
-                if(!email.contains("@")){
+                if(!email.contains("@"))
                     showToast("Email must contain @");
-                } else if (password.length() < 6) {
+                else if (password.length() < 6)
                     showToast("Password must be at least 6 Characters");
-                } else{
+                else
                     createAccount(email, password);
-                }
+
 
 
 
